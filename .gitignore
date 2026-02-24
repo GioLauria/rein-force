@@ -1,0 +1,38 @@
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Env files
+.env
+.env.*
+
+# Build output
+build/
+dist/
+out/
+
+# Coverage
+automated-coverage/
+coverage/
+
+# Temp
+.tmp/
+tmp/
+temp/
+*.tmp
+*.bak
