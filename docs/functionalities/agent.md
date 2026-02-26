@@ -13,9 +13,35 @@ Key methods
 - `update(s,a,reward,sNext,done)` — Q-value update rule.
 
 Rewards used by simulator
-- step: -1
-- collision: -10 (and episode reset)
+- step (ordinary move): +10
+- collision (hitting obstacle): -100 (terminal, episode ends)
+- wall (attempted out-of-bounds): -1 (non-terminal)
 - goal: +100 (episode terminal)
+
+Quadratp (variable-size grid) guidance
+- State space: an N x N grid with obstacles masked. Use a flattened index `i = y*N + x` for fixed-size tabular Q.
+- Q-table size: `N*N x 4` (tabular). For N up to ~200 (≈160k states) tabular Q is still feasible; for larger grids consider a DQN with a CNN that takes the grid as an image input.
+- Obstacles: treat stepping into an obstacle as a terminal event with a large negative reward (e.g. -100). Alternatively, mark obstacle cells as invalid and exclude them from the tabular state indexing (maintain a free-state mapping).
+
+Pseudocode (updated)
+
+Inizializza quadratp[N][N] con ostacoli, A=(0,0), B=(N-1,N-1)
+Q[stato][a] = 0  # stato = (x,y) o flatten(i=N*x+y)
+
+Per episode=1 to M:
+  s = A
+  While non terminale:
+    a = ε-greedy su Q[s]
+    s_next, r = step_quadratp(s, a)  # Controlla bounds/ostacoli
+    Se ostacolo: r=-100, termina
+    Q[s][a] += α*(r + γ*max Q[s_next] - Q[s][a])
+    s = s_next
+  ε *= decay
+Policy finale: da s, argmax_a Q[s,a] per navigare quadratp.
+
+Notes:
+- Consider maintaining a mapping of free states if many obstacles exist to reduce Q-table size.
+- For very large grids, represent the grid as an image and train a DQN (CNN encoder + dense policy/Q head).
 
 Hints for tuning
 - Increase `epsilon` to encourage exploration during early training.

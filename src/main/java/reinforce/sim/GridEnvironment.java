@@ -91,9 +91,8 @@ public class GridEnvironment {
             return StepResult.WALL;
         }
 
-        // collision with obstacle
+        // collision with obstacle: do not reset here, let episode handler decide
         if (obstacles[np.y][np.x]) {
-            agent = new Point(start);
             return StepResult.COLLISION;
         }
         agent = np;

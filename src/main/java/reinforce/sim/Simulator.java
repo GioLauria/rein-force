@@ -57,12 +57,11 @@ public class Simulator {
         // ordinary move gives +10
         if (result == GridEnvironment.StepResult.CONTINUE) {
             reward = 10.0;
-        }
-        if (result == GridEnvironment.StepResult.COLLISION) {
-            reward = -1.0; // penalty for hitting obstacle
-            done = false; // collision resets agent inside env; not terminal for simulator
+        } else if (result == GridEnvironment.StepResult.COLLISION) {
+            reward = -100.0; // terminal severe penalty for hitting obstacle
+            done = true; // end episode on obstacle
         } else if (result == GridEnvironment.StepResult.WALL) {
-            reward = -1.0; // penalty for hitting wall
+            reward = -1.0; // penalty for hitting wall (non-terminal)
         } else if (result == GridEnvironment.StepResult.GOAL) {
             reward = 100.0;
             done = true;
@@ -77,6 +76,12 @@ public class Simulator {
         // assimilate totalPoints into the current cell
         java.awt.Point ap2 = env.getAgent();
         env.setCellScore(ap2.x, ap2.y, totalPoints);
+        // if episode terminated (goal or collision), restart environment
+        if (done) {
+            restart();
+            return;
+        }
+
         // if points drop below zero, restart the environment
         if (totalPoints < 0.0) {
             restart();
