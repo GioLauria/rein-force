@@ -1,27 +1,5 @@
 # Contributing
 
-Thanks for your interest in contributing!
-
-
-
-## Ways to contribute
-
-- Report bugs and request features
-- Improve documentation
-- Submit code changes
-- Review pull requests
-
-## Code of Conduct
-
-Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).
-
-## Development setup
-
-1. Fork the repository and clone your fork. Example (replace with your fork URL):
-
-````markdown
-# Contributing
-
 Thanks for your interest in contributing to Rein-Force Simulator.
 
 This repository is a Java/Maven project. Below are the recommended steps and guidelines for contributing.
@@ -171,6 +149,4 @@ Releases follow Semantic Versioning. Typical steps:
 4. Create a GitHub release from the tag and attach artifacts if necessary.
 
 If you need assistance making a release, contact the maintainers listed in `GOVERNANCE.md`.
-
-````
 
