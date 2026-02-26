@@ -19,17 +19,7 @@ Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 1. Fork the repository and clone your fork. Example (replace with your fork URL):
 
-```bash
-git clone https://github.com/GioLauria/rein-force.git
-cd rein-force
-```
-
-## Branching and commits
-
-- Use short, descriptive branch names.
-- Keep commits focused and small.
-- Use clear, conventional commit messages (see "Commit message format" below).
-
+````markdown
 # Contributing
 
 Thanks for your interest in contributing to Rein-Force Simulator.
@@ -56,11 +46,11 @@ git clone https://github.com/<your-username>/rein-force.git
 cd rein-force
 ```
 
-2. Build and run tests:
+2. Build and run tests.
 
 The project includes the Maven Wrapper so you do not need a local Maven installation.
 
-On Windows:
+On Windows (PowerShell):
 
 ```powershell
 # Run the test suite
@@ -83,20 +73,20 @@ On macOS / Linux:
 java -jar target/rein-force-sim-0.1.0.jar
 ```
 
-Environment variables
+### JAVA_HOME
 
-The Maven Wrapper requires `JAVA_HOME` to point to a JDK. If the wrapper reports "JAVA_HOME not found", set it temporarily or persistently as follows.
+Set `JAVA_HOME` to a JDK if required by your environment.
 
-Windows (PowerShell, session):
+Windows (session):
 
 ```powershell
-$env:JAVA_HOME = 'C:\Program Files\Java\jdk-XX'
+$env:JAVA_HOME = 'C:\\Program Files\\Java\\jdk-XX'
 ```
 
 Windows (persist):
 
 ```cmd
-setx JAVA_HOME "C:\Program Files\Java\jdk-XX"
+setx JAVA_HOME "C:\\Program Files\\Java\\jdk-XX"
 ```
 
 macOS / Linux (session):
@@ -105,10 +95,7 @@ macOS / Linux (session):
 export JAVA_HOME="/path/to/jdk"
 ```
 
-macOS / Linux (persist): add the `export` line to `~/.bashrc`, `~/.bash_profile`, or `~/.zshrc`.
-
 Verify with `java -version` and `echo $JAVA_HOME` (or `echo %JAVA_HOME%` on Windows).
-
 
 Notes:
 - The project uses JUnit 5 for tests.
@@ -184,3 +171,6 @@ Releases follow Semantic Versioning. Typical steps:
 4. Create a GitHub release from the tag and attach artifacts if necessary.
 
 If you need assistance making a release, contact the maintainers listed in `GOVERNANCE.md`.
+
+````
+
