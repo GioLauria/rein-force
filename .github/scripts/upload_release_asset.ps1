@@ -9,9 +9,10 @@ if (-not $env:GITHUB_TOKEN) {
   exit 1
 }
 
-Write-Host "Uploading $AssetPath as $AssetName to $UploadUrl"
+$cleanUrl = if ($UploadUrl -match '\{') { $UploadUrl.Split('{')[0] } else { $UploadUrl }
+Write-Host "Uploading $AssetPath as $AssetName to $cleanUrl"
 
-$uri = "$UploadUrl?name=$AssetName"
+$uri = "$cleanUrl?name=$AssetName"
 $headers = @{ Authorization = "Bearer $env:GITHUB_TOKEN" }
 
 try {
