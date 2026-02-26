@@ -1,0 +1,11 @@
+#!/bin/sh
+# Prevent direct tag pushes. Encourage using scripts/tag_release.sh
+while read local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/tags/*)
+      echo "Detected tag push. Please create tags using scripts/tag_release.sh which updates CHANGELOG and commits it before tagging."
+      exit 1
+      ;;
+  esac
+done
+exit 0
