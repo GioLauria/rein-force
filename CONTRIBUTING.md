@@ -80,6 +80,33 @@ On macOS / Linux:
 java -jar target/rein-force-sim-0.1.0.jar
 ```
 
+Environment variables
+
+The Maven Wrapper requires `JAVA_HOME` to point to a JDK. If the wrapper reports "JAVA_HOME not found", set it temporarily or persistently as follows.
+
+Windows (PowerShell, session):
+
+```powershell
+$env:JAVA_HOME = 'C:\Program Files\Java\jdk-XX'
+```
+
+Windows (persist):
+
+```cmd
+setx JAVA_HOME "C:\Program Files\Java\jdk-XX"
+```
+
+macOS / Linux (session):
+
+```bash
+export JAVA_HOME="/path/to/jdk"
+```
+
+macOS / Linux (persist): add the `export` line to `~/.bashrc`, `~/.bash_profile`, or `~/.zshrc`.
+
+Verify with `java -version` and `echo $JAVA_HOME` (or `echo %JAVA_HOME%` on Windows).
+
+
 Notes:
 - The project uses JUnit 5 for tests.
 - IDEs: IntelliJ IDEA and Eclipse are supported; use the provided `pom.xml`.
