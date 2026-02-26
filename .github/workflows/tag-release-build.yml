@@ -70,6 +70,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: List release files (Linux)
+        if: matrix.os != 'windows-latest'
+        run: |
+          echo 'Release folder contents:'
+          ls -la release || true
+
       - name: Upload release asset (Windows)
         if: matrix.os == 'windows-latest'
         uses: actions/upload-release-asset@v1
@@ -80,3 +86,10 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: List release files (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          Write-Host 'Release folder contents:'
+          Get-ChildItem -Path release -Recurse -Force | Format-Table -AutoSize
+        shell: pwsh
