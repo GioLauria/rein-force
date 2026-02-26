@@ -45,6 +45,8 @@ jobs:
 
       - name: Build with Maven
         run: |
+          # ensure wrapper is executable on Linux runners
+          if [ -f mvnw ]; then chmod +x mvnw || true; fi
           if [ -f mvnw ]; then ./mvnw -DskipTests package; elif [ -f mvnw.cmd ]; then ./mvnw.cmd -DskipTests package; else mvn -DskipTests package; fi
         shell: bash
 
