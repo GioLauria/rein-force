@@ -1,0 +1,32 @@
+name: Validate changelog
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  check:
+    name: Changelog check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run changelog validation (non-blocking)
+        run: |
+          echo "Changed files:"; cat changed_files.txt || true
+          if grep -q CHANGELOG.md changed_files.txt; then
+            echo "CHANGELOG.md modified in this PR.";
+          else
+            echo "WARNING: CHANGELOG.md not modified. Please update changelog if this PR contains user-visible changes.";
+          fi
+        run: git diff --name-only origin/${{ github.base_ref }}...HEAD > changed_files.txt
+
+      - name: Warn if CHANGELOG.md not updated
+        run: |
+          if ! grep -q "CHANGELOG.md" changed_files.txt; then
+            echo "WARNING: CHANGELOG.md not changed in this PR. Please update CHANGELOG.md if this PR contains user-visible changes.";
+          else
+            echo "CHANGELOG.md updated.";
+          fi

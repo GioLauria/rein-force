@@ -1,58 +1,16 @@
-# Project Name
+# Rein-Force Simulator
 
-Short description.
+Simple Java reinforcement-learning style simulator with a GUI. The environment is a square grid containing random obstacles; a spherical bot starts at a random perimeter point A and attempts to reach a random perimeter point B while avoiding obstacles. The agent uses a simple Q-learning table on a discretized grid.
 
-> Template note: replace placeholders before publishing.
+Quick start
 
-## Highlights
-
-- Core value proposition.
-- Key feature.
-- Another key feature.
-
-## Getting started
-
-### Prerequisites
-
-- Language runtime (TBD)
-- Package manager (TBD)
-
-### Install
-
-```sh
-# Example install command
-# package-manager install
+```bash
+cd "simulator"
+mvn -q -DskipTests package
+java -jar target/rein-force-sim-0.1.0.jar
 ```
 
-### Usage
-
-```sh
-# Example usage command
-# package-manager run start
-```
-
-## Configuration
-
-Describe environment variables and configuration files here.
-
-## Documentation
-
-- API docs: docs/api (TBD)
-- Guides: docs/guides (TBD)
-- Architecture: docs/architecture (TBD)
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development workflow and standards.
-
-## Code of Conduct
-
-This project follows the [Code of Conduct](CODE_OF_CONDUCT.md).
-
-## Security
-
-Report security issues as described in [SECURITY.md](SECURITY.md).
-
-## License
-
-Licensed under the MIT License. See [LICENSE](LICENSE).
+Controls:
+- Play: resume simulation
+- Stop: pause simulation
+- Restart: new environment with random A, B, obstacles
