@@ -10,8 +10,8 @@ permissions:
   packages: write
 
 jobs:
-  build:
-    name: Build artifacts (Maven)
+  update-changelog:
+    name: Update CHANGELOG.md
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,6 +19,67 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Generate release notes
+        run: |
+          node .github/scripts/generate-release-notes.js > release_notes.txt || true
+          echo "----"; echo "Release notes:"; cat release_notes.txt || true
+
+      - name: Update CHANGELOG.md
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          DATE=$(date -u +%F)
+          NOTES=$(cat release_notes.txt || true)
+          python - <<PY
+import sys,os
+tag=os.environ.get('TAG','unknown')
+date=os.environ.get('DATE','')
+notes=os.environ.get('NOTES')
+if notes is None:
+    notes=''
+with open('CHANGELOG.md','r',encoding='utf-8') as f:
+    content=f.read()
+new_section=f"## [{tag}] - {DATE}\n\n{NOTES}\n\n"
+if f"## [{tag}]" in content:
+    print('Changelog already contains this tag, skipping update')
+    sys.exit(0)
+if '## [Unreleased]' in content:
+    parts=content.split('## [Unreleased]',1)
+    out=parts[0] + '## [Unreleased]' + '\n\n' + new_section + parts[1].lstrip()
+else:
+    out=new_section + content
+with open('CHANGELOG.md','w',encoding='utf-8') as f:
+    f.write(out)
+print('CHANGELOG.md updated')
+PY
+
+      - name: Commit and push CHANGELOG.md
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add CHANGELOG.md || true
+          if git diff --staged --quiet; then
+            echo "No changelog changes to commit"
+          else
+            git commit -m "ci(release): update CHANGELOG for ${{ github.ref_name }}"
+            git push origin HEAD:${{ github.ref }} || git push origin --tags
+          fi
+
+  build:
+    name: Build artifacts (Maven)
+    runs-on: ubuntu-latest
+    needs: update-changelog
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup JDK
         uses: actions/setup-java@v4
