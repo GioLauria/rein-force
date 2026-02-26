@@ -15,31 +15,19 @@ jobs:
       upload_url: ${{ steps.ensure_release.outputs.upload_url }}
       release_id: ${{ steps.ensure_release.outputs.id }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        if: runner.os != 'Windows'
+        run: |
+          chmod +x .github/scripts/*.sh || true
+
       - name: Ensure release exists and expose outputs
         id: ensure_release
         run: |
-          set -e
-          TAG='${{ github.ref_name }}'
-          REPO='${{ github.repository }}'
-          echo "Checking for existing release with tag $TAG in $REPO"
-          rsp=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/$REPO/releases/tags/$TAG")
-          id=$(echo "$rsp" | jq -r .id)
-          upload_url=$(echo "$rsp" | jq -r .upload_url)
-          if [ -z "$id" ] || [ "$id" = "null" ]; then
-            echo "Release not found, creating..."
-            data=$(jq -n --arg tag "$TAG" --arg name "Release $TAG" --arg body "Automated build artifacts for $TAG" '{tag_name:$tag, name:$name, body:$body, draft:false, prerelease:false}')
-            created=$(curl -s -X POST -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" -d "$data" "https://api.github.com/repos/$REPO/releases")
-            id=$(echo "$created" | jq -r .id)
-            upload_url=$(echo "$created" | jq -r .upload_url)
-            if [ -z "$id" ] || [ "$id" = "null" ]; then
-              echo "Failed to create release: $created" >&2
-              exit 1
-            fi
-          else
-            echo "Found existing release id=$id"
-          fi
-          echo "id=$id" >> $GITHUB_OUTPUT
-          echo "upload_url=$upload_url" >> $GITHUB_OUTPUT
+          ./.github/scripts/ensure_release.sh "${{ github.ref_name }}" "${{ github.repository }}"
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -59,50 +47,17 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Build with Maven
+      - name: Run packaging script (Linux)
+        if: matrix.os == 'ubuntu-latest'
         run: |
-          # ensure wrapper is executable on Linux runners
-          if [ -f mvnw ]; then chmod +x mvnw || true; fi
-          if [ -f mvnw ]; then ./mvnw -DskipTests package; elif [ -f mvnw.cmd ]; then ./mvnw.cmd -DskipTests package; else mvn -DskipTests package; fi
+          chmod +x .github/scripts/build_release.sh || true
+          .github/scripts/build_release.sh "${{ github.ref_name }}"
         shell: bash
 
-      - name: Create runtime image and package
+      - name: Run packaging script (Windows)
+        if: matrix.os == 'windows-latest'
         run: |
-          set -e
-          # prepare folders
-          rm -rf image release
-          mkdir -p image/app image/bin
-
-          # create a minimal runtime image including desktop support
-          "$JAVA_HOME/bin/jlink" --add-modules java.base,java.desktop --compress=2 --no-header-files --no-man-pages --output image/runtime
-
-          # copy jar
-          cp target/*.jar image/app/rein-force-sim.jar
-
-          # create run scripts
-          cat > image/bin/run.sh <<'SH'
-          #!/usr/bin/env sh
-          DIR="$(cd "$(dirname "$0")/.." && pwd)"
-          "$DIR/runtime/bin/java" -jar "$DIR/app/rein-force-sim.jar" "$@"
-          SH
-          chmod +x image/bin/run.sh
-
-          cat > image/bin/run.bat <<'BAT'
-          @echo off
-          set DIR=%~dp0\..
-          %DIR%\runtime\bin\java -jar %DIR%\app\rein-force-sim.jar %*
-          BAT
-
-          # create platform-specific archive
-          mkdir -p release
-          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
-            cd image
-            zip -r ../release/rein-force-${{ github.ref_name }}-linux.zip .
-          else
-            # on Windows use powershell to compress
-            powershell -Command "Compress-Archive -Path image\\* -DestinationPath release\\rein-force-${{ github.ref_name }}-windows.zip -Force"
-          fi
-        shell: bash
+          pwsh -NoProfile -NonInteractive -Command ".github/scripts/build_release.ps1 -Tag '${{ github.ref_name }}'"
 
       - name: Upload release asset (Linux)
         if: matrix.os != 'windows-latest'
