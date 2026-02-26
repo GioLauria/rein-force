@@ -14,6 +14,7 @@ jobs:
     outputs:
       upload_url: ${{ steps.ensure_release.outputs.upload_url }}
       release_id: ${{ steps.ensure_release.outputs.id }}
+      body: ${{ steps.ensure_release.outputs.body }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -49,13 +50,17 @@ jobs:
 
       - name: Run packaging script (Linux)
         if: matrix.os == 'ubuntu-latest'
+        env:
+          RELEASE_NOTES: ${{ needs.create_release.outputs.body }}
         run: |
           chmod +x .github/scripts/build_release.sh || true
-          .github/scripts/build_release.sh "${{ github.ref_name }}"
+          RELEASE_NOTES="$RELEASE_NOTES" .github/scripts/build_release.sh "${{ github.ref_name }}"
         shell: bash
 
       - name: Run packaging script (Windows)
         if: matrix.os == 'windows-latest'
+        env:
+          RELEASE_NOTES: ${{ needs.create_release.outputs.body }}
         run: |
           pwsh -NoProfile -NonInteractive -Command ".github/scripts/build_release.ps1 -Tag '${{ github.ref_name }}'"
 

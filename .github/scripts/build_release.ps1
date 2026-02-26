@@ -40,6 +40,12 @@ try {
   Write-Host "Copying jar $($jar.FullName)"
   Copy-Item -Path $jar.FullName -Destination image\app\rein-force-sim.jar
 
+  # include release notes if provided via RELEASE_NOTES env var
+  if ($env:RELEASE_NOTES) {
+    Write-Host "Adding release notes to package"
+    $env:RELEASE_NOTES | Out-File -FilePath image\release_notes.txt -Encoding UTF8
+  }
+
   $runBat = @"
 @echo off
 set DIR=%~dp0\..

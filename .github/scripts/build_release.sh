@@ -36,6 +36,11 @@ chmod +x image/bin/run.sh
 
 mkdir -p "$RELEASE_DIR"
 ARCHIVE="$RELEASE_DIR/rein-force-${TAG}-linux.zip"
+# include release notes if provided via RELEASE_NOTES env var
+if [ -n "${RELEASE_NOTES:-}" ]; then
+  printf "%s\n" "$RELEASE_NOTES" > image/release_notes.txt
+fi
+
 echo "Creating archive $ARCHIVE"
 cd image
 zip -r ../"$ARCHIVE" .
