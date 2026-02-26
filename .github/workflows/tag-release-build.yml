@@ -61,12 +61,10 @@ jobs:
 
       - name: Upload release asset (Linux)
         if: matrix.os != 'windows-latest'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: release/rein-force-${{ github.ref_name }}-linux.zip
-          asset_name: rein-force-${{ github.ref_name }}-linux.zip
-          asset_content_type: application/zip
+        run: |
+          chmod +x .github/scripts/upload_release_asset.sh || true
+          .github/scripts/upload_release_asset.sh "${{ needs.create_release.outputs.upload_url }}" "release/rein-force-${{ github.ref_name }}-linux.zip" "rein-force-${{ github.ref_name }}-linux.zip"
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -78,12 +76,9 @@ jobs:
 
       - name: Upload release asset (Windows)
         if: matrix.os == 'windows-latest'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: release/rein-force-${{ github.ref_name }}-windows.zip
-          asset_name: rein-force-${{ github.ref_name }}-windows.zip
-          asset_content_type: application/zip
+        run: |
+          pwsh -NoProfile -NonInteractive -Command ".github/scripts/upload_release_asset.ps1 -UploadUrl '${{ needs.create_release.outputs.upload_url }}' -AssetPath 'release/rein-force-${{ github.ref_name }}-windows.zip' -AssetName 'rein-force-${{ github.ref_name }}-windows.zip'"
+        shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
