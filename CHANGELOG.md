@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on Keep a Changelog, and this project adheres to Semantic
 Versioning.
 
+## [v0.0.13]
+
+
+- chore(release): update CHANGELOG for v0.0.13
+
+- chore(scripts): place newest tag first and append Unreleased section
+
+- chore(scripts): changelog headings use tag-only (no date)
+
+
+
+## [v0.0.12]
+
+
+- chore(release): update CHANGELOG for 0.0.12
+
+- chore(scripts): intercept v* tags in pre-push and make tag_release recreate annotated tags; commit changelog only if changed
+
+- chore(scripts): add changelog updater and release helpers; block direct tag pushes via .githooks/pre-push
+
+- chore: save changes
+
+- chore: consolidate CONTRIBUTING.md and remove duplicates
+
+
+
 ## [v0.0.11]
 
 
@@ -117,6 +143,8 @@ Versioning.
 
 - docs: add JAVA_HOME setup instructions for Maven Wrapper
 
+- docs: document Maven Wrapper usage in CONTRIBUTING and development docs
+
 - chore: add Maven Wrapper (mvnw) to enforce Maven requirement
 
 - chore: remove .github and start fresh
@@ -142,19 +170,6 @@ Versioning.
 
 ## [Unreleased]
 
-- chore(scripts): place newest tag first and append Unreleased section
-
-- chore(scripts): changelog headings use tag-only (no date)
-
-- chore(release): update CHANGELOG for 0.0.12
-
-- chore(scripts): intercept v* tags in pre-push and make tag_release recreate annotated tags; commit changelog only if changed
-
-- chore(scripts): add changelog updater and release helpers; block direct tag pushes via .githooks/pre-push
-
-- chore: save changes
-
-- chore: consolidate CONTRIBUTING.md and remove duplicates
-
+- Placeholder for upcoming changes.
 
 
