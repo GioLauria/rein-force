@@ -152,6 +152,16 @@ git config core.hooksPath .githooks
 
 The hooks will run the Maven Wrapper (or `mvn` if the wrapper is not present) and abort the commit if the build fails. Enabling hooks is a local preference and is not forced by the repository.
 
+### Repository Git configuration (optional)
+
+We provide a repository-level `.gitconfig` with useful aliases and safe defaults for Java/Maven development. To load it into your local repo configuration without changing your global settings, run from the repository root:
+
+```bash
+git config include.path .gitconfig
+```
+
+This enables aliases such as `git mpackage`, `git mtest` and `git runjar` which prefer the Maven Wrapper (`mvnw`) when present.
+
 CI runs tests on each PR. Fix any CI failures before requesting review.
 
 ## Testing

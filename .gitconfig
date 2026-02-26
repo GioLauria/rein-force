@@ -1,0 +1,19 @@
+[user]
+# Optional: users can set name/email locally or rely on global config
+
+[core]
+    # Use the project's local hooks directory (documented in CONTRIBUTING.md)
+    hooksPath = .githooks
+
+[alias]
+    # Run Maven (use mvnw if present)
+    mvn = !sh -c 'if [ -x mvnw ]; then ./mvnw "$@"; else mvn "$@"; fi' -
+    mpackage = !sh -c 'if [ -x mvnw ]; then ./mvnw -DskipTests package; else mvn -DskipTests package; fi' -
+    mtest = !sh -c 'if [ -x mvnw ]; then ./mvnw test; else mvn test; fi' -
+    runjar = !sh -c 'java -jar target/$(ls target | grep "rein-force" | head -n1)' -
+    # convenience: re-run last tag push
+    rtag = !sh -c 'git push --force origin refs/tags/$1' -
+
+[core]
+    # encourage consistent line endings for Java projects
+    autocrlf = input
