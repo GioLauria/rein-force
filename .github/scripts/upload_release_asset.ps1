@@ -9,8 +9,7 @@ if (-not $env:GITHUB_TOKEN) {
   exit 1
 }
 
-## sanitize and normalize the upload URL (strip any URI template like `{?name,label}`)
-$cleanUrl = $UploadUrl -replace '\{.*\}','$null'
+$cleanUrl = $UploadUrl -replace '\{.*\}',''
 $cleanUrl = $cleanUrl.Trim()
 if ($cleanUrl.EndsWith('/')) { $cleanUrl = $cleanUrl.TrimEnd('/') }
 
@@ -23,6 +22,8 @@ $uri = "$cleanUrl?name=$encodedName"
 $headers = @{ Authorization = "Bearer $env:GITHUB_TOKEN" }
 
 Write-Host "Final upload URI: $uri"
+Write-Host "Raw UploadUrl: <$UploadUrl>"
+Write-Host "Clean UploadUrl: <$cleanUrl>"
 
 try {
   # validate URI before calling
