@@ -4,11 +4,45 @@ Simple Java reinforcement-learning style simulator with a GUI. The environment i
 
 Quick start
 
+The project includes the Maven Wrapper so contributors don't need Maven pre-installed.
+
+Using the Maven Wrapper (recommended)
+
+Windows (PowerShell):
+
+```powershell
+.\mvnw.cmd -q -DskipTests package
+java -jar target\rein-force-sim-0.1.0.jar
+```
+
+macOS / Linux:
+
 ```bash
-cd "simulator"
+./mvnw -q -DskipTests package
+java -jar target/rein-force-sim-0.1.0.jar
+```
+
+Using system Maven (if installed):
+
+```bash
 mvn -q -DskipTests package
 java -jar target/rein-force-sim-0.1.0.jar
 ```
+
+Run tests:
+
+```bash
+./mvnw test
+# or on Windows: mvnw.cmd test
+```
+
+Run from your IDE:
+
+- Open the project as a Maven project in IntelliJ IDEA or Eclipse.
+- Run the `reinforce.sim.AppLauncher` main class.
+
+Notes:
+- The Maven Wrapper requires `JAVA_HOME` to point to a JDK. See `CONTRIBUTING.md` or `docs/functionalities/development.md` for instructions to set `JAVA_HOME` if you see a "JAVA_HOME not found" error.
 
 Controls:
 - Play: resume simulation
