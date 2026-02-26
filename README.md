@@ -52,6 +52,10 @@ macOS / Linux:
 ./scripts/build_with_tag.sh
 ```
 
+Build output location
+
+Both helper scripts place the built JAR under the `outputs/` directory (project root) as `outputs/rein-force-sim-<revision>.jar`.
+
 The scripts set the `Implementation-Version` manifest entry to the latest tag when available, otherwise the short commit id, and finally `unknown` if Git data is unavailable.
 
 Run from your IDE:

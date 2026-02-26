@@ -71,6 +71,10 @@ scripts\build_with_tag.bat
 ./scripts/build_with_tag.sh
 ```
 
+Build output location
+
+Both helper scripts place the built JAR under the `outputs/` directory at the repository root as `outputs/rein-force-sim-<revision>.jar`.
+
 The scripts will attempt to use the latest Git tag as the `Implementation-Version` manifest entry and fall back to the short commit id or `unknown` when no tag is available.
 
 IDE tips

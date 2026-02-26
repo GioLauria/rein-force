@@ -17,23 +17,10 @@ echo "Building with revision=$TAG"
 
 # Run the Maven wrapper from the repository root (script lives in /scripts)
 pushd "$(dirname "$0")/.." >/dev/null
-./mvnw -DskipTests -Drevision="$TAG" package
-RC=$?
 
-# If build succeeded, copy the produced JAR to the repository root
-if [ "$RC" -eq 0 ]; then
-	JAR="target/rein-force-sim-$TAG.jar"
-	if [ -f "$JAR" ]; then
-		cp -f "$JAR" "rein-force-sim-$TAG.jar"
-	else
-		# fallback: copy first matching jar
-		for f in target/rein-force-sim-*.jar; do
-			if [ -f "$f" ]; then
-				cp -f "$f" "rein-force-sim-$TAG.jar"
-				break
-			fi
-		done
-	fi
-fi
+# Ensure outputs directory exists and instruct Maven to use it as build directory
+mkdir -p outputs
+./mvnw -DskipTests -Drevision="$TAG" -Poutputs package
+RC=$?
 popd >/dev/null
 exit $RC

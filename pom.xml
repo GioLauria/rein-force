@@ -48,4 +48,12 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>outputs</id>
+            <build>
+                <directory>${project.basedir}/outputs</directory>
+            </build>
+        </profile>
+    </profiles>
 </project>
