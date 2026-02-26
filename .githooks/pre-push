@@ -3,8 +3,21 @@
 while read local_ref local_sha remote_ref remote_sha; do
   case "$remote_ref" in
     refs/tags/*)
-      echo "Detected tag push. Please create tags using scripts/tag_release.sh which updates CHANGELOG and commits it before tagging."
-      exit 1
+      tag=${remote_ref#refs/tags/}
+      # Only intercept tags starting with 'v'
+      case "$tag" in
+        v*)
+          echo "Detected tag push of '$tag'. Running scripted release flow..."
+          # call the helper which will update changelog, commit and push the tag
+          scripts/tag_release.sh "$tag"
+          echo "Release flow completed. Aborting original push (release script pushed changes)."
+          exit 1
+          ;;
+        *)
+          echo "Tag push detected ($tag). Only tags starting with 'v' should be created via the release script. Aborting."
+          exit 1
+          ;;
+      esac
       ;;
   esac
 done
