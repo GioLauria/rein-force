@@ -1,5 +1,8 @@
 name: Build release packages on tag
 
+permissions:
+  contents: write
+
 on:
   push:
     tags:
