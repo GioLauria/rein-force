@@ -10,6 +10,7 @@ public class GridEnvironment {
 
     private final int size;
     private final boolean[][] obstacles;
+    private double[][] cellScores;
     private final Random rnd = new Random();
     private Point start;
     private Point goal;
@@ -18,11 +19,13 @@ public class GridEnvironment {
     public GridEnvironment(int size, int obstacleCount) {
         this.size = size;
         this.obstacles = new boolean[size][size];
+        this.cellScores = new double[size][size];
         reset(obstacleCount);
     }
 
     public void reset(int obstacleCount) {
         clearObstacles();
+        clearScores();
         placeObstacles(obstacleCount);
         start = randomPerimeterPoint();
         goal = randomPerimeterPointDifferent(start);
@@ -41,6 +44,10 @@ public class GridEnvironment {
             int key = y * size + x;
             if (used.add(key)) obstacles[y][x] = true;
         }
+    }
+
+    private void clearScores() {
+        for (int y = 0; y < size; y++) for (int x = 0; x < size; x++) cellScores[y][x] = 0.0;
     }
 
     private Point randomPerimeterPoint() {
@@ -96,4 +103,8 @@ public class GridEnvironment {
 
     public int stateIndex(Point p) { return p.y * size + p.x; }
     public int stateIndexAgent() { return stateIndex(agent); }
+    
+    public double getCellScore(int x, int y) { return cellScores[y][x]; }
+    public void setCellScore(int x, int y, double score) { cellScores[y][x] = score; }
+    public void setCellScore(Point p, double score) { setCellScore(p.x, p.y, score); }
 }

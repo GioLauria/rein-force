@@ -40,6 +40,30 @@ public class SimulatorPanel extends JPanel {
         for (int y = 0; y < size; y++) for (int x = 0; x < size; x++)
             if (env.isObstacle(x, y)) g.fillRect(x * cell, y * cell, cell, cell);
 
+        // cell score heatmap (draw under agent)
+        double maxAbs = 1.0;
+        for (int y = 0; y < size; y++) for (int x = 0; x < size; x++) {
+            double s = env.getCellScore(x, y);
+            if (Math.abs(s) > maxAbs) maxAbs = Math.abs(s);
+        }
+        for (int y = 0; y < size; y++) for (int x = 0; x < size; x++) {
+            double s = env.getCellScore(x, y);
+            float norm = (float)(s / maxAbs);
+            if (Math.abs(norm) < 1e-6) continue;
+            Color c;
+            if (norm > 0) {
+                // positive -> red tint
+                float v = Math.min(1.0f, norm);
+                c = new Color(1.0f, 1.0f - v, 1.0f - v);
+            } else {
+                // negative -> blue tint
+                float v = Math.min(1.0f, (float)-norm);
+                c = new Color(1.0f - v, 1.0f - v, 1.0f);
+            }
+            g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 64));
+            g.fillRect(x * cell, y * cell, cell, cell);
+        }
+
         // start and goal
         g.setColor(Color.BLUE);
         Point s = env.getStart();

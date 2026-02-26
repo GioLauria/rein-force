@@ -25,6 +25,18 @@ public class QLearningAgent {
         return best;
     }
 
+    public int chooseActionWithAttraction(int state, double[] neighborScores, double attractionWeight) {
+        if (rnd.nextDouble() < epsilon) return rnd.nextInt(actionCount);
+        double[] row = q[state];
+        int best = 0;
+        double bestVal = Double.NEGATIVE_INFINITY;
+        for (int a = 0; a < actionCount; a++) {
+            double val = row[a] + attractionWeight * (neighborScores != null && neighborScores.length > a ? neighborScores[a] : 0.0);
+            if (val > bestVal) { bestVal = val; best = a; }
+        }
+        return best;
+    }
+
     public void update(int s, int a, double reward, int sNext, boolean done) {
         double qsa = q[s][a];
         double maxNext = 0;

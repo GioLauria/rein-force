@@ -36,11 +36,28 @@ public class Simulator {
     private void step() {
         long t0 = System.nanoTime();
         int state = env.stateIndexAgent();
-        int action = agent.chooseAction(state);
+        // compute neighbor cell scores to bias action selection
+        double[] neighborScores = new double[4];
+        java.awt.Point ap = env.getAgent();
+        // up
+        neighborScores[0] = env.getCellScore(Math.max(0, ap.x), Math.max(0, ap.y - 1));
+        // right
+        neighborScores[1] = env.getCellScore(Math.min(env.getSize() - 1, ap.x + 1), ap.y);
+        // down
+        neighborScores[2] = env.getCellScore(ap.x, Math.min(env.getSize() - 1, ap.y + 1));
+        // left
+        neighborScores[3] = env.getCellScore(Math.max(0, ap.x - 1), ap.y);
+
+        double attractionWeight = 0.5; // moderate bias towards higher-scored cells
+        int action = agent.chooseActionWithAttraction(state, neighborScores, attractionWeight);
         GridEnvironment.StepResult result = env.step(action);
         int nextState = env.stateIndexAgent();
         boolean done = false;
-        double reward = 0.0; // default: no point change for ordinary moves
+        double reward = 0.0; // default first
+        // ordinary move gives +10
+        if (result == GridEnvironment.StepResult.CONTINUE) {
+            reward = 10.0;
+        }
         if (result == GridEnvironment.StepResult.COLLISION) {
             reward = -1.0; // penalty for hitting obstacle
             done = false; // collision resets agent inside env; not terminal for simulator
@@ -57,6 +74,9 @@ public class Simulator {
         // incremental average
         avgDurationMs = ((avgDurationMs * (iterations - 1)) + lastDurationMs) / iterations;
         totalPoints += reward;
+        // assimilate totalPoints into the current cell
+        java.awt.Point ap2 = env.getAgent();
+        env.setCellScore(ap2.x, ap2.y, totalPoints);
         // if points drop below zero, restart the environment
         if (totalPoints < 0.0) {
             restart();
