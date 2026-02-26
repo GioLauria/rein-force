@@ -5,19 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on Keep a Changelog, and this project adheres to Semantic
 Versioning.
 
-## [Unreleased]
-
-- chore(scripts): intercept v* tags in pre-push and make tag_release recreate annotated tags; commit changelog only if changed
-
-- chore(scripts): add changelog updater and release helpers; block direct tag pushes via .githooks/pre-push
-
-- chore: save changes
-
-- chore: consolidate CONTRIBUTING.md and remove duplicates
-
-
-
-## [v0.0.11] - tag v0.0.11 Tagger: Giovanni Lauria <giovanni.lauria@gmail.com>  ci: trigger release including release_notes 2026-02-26
+## [v0.0.11]
 
 
 - ci: generate standardized release_notes.txt and update release body in ensure_release.sh
@@ -26,49 +14,49 @@ Versioning.
 
 
 
-## [v0.0.10] - tag v0.0.10 Tagger: Giovanni Lauria <giovanni.lauria@gmail.com>  ci: retry upload with UriBuilder fix 2026-02-26
+## [v0.0.10]
 
 
 - ci: build upload URI with UriBuilder and validate base URL in upload_release_asset.ps1
 
 
 
-## [v0.0.9] - tag v0.0.9 Tagger: Giovanni Lauria <giovanni.lauria@gmail.com>  ci: retry upload after fixing URL template strip 2026-02-26
+## [v0.0.9]
 
 
 - ci: fix upload URL template stripping and add debug output
 
 
 
-## [v0.0.8] - tag v0.0.8 Tagger: Giovanni Lauria <giovanni.lauria@gmail.com>  ci: retrigger release workflow after restoring target jar location 2026-02-26
+## [v0.0.8]
 
 
 - ci: restore default Maven output (target/) in build_with_tag scripts
 
 
 
-## [v0.0.7] - tag v0.0.7 Tagger: Giovanni Lauria <giovanni.lauria@gmail.com>  ci: trigger release workflow (retry upload) 2026-02-26
+## [v0.0.7]
 
 
 - ci: sanitize upload URL and URL-encode asset name in upload_release_asset.ps1
 
 
 
-## [v0.0.6] - tag v0.0.6 Tagger: Giovanni Lauria <giovanni.lauria@gmail.com>  ci: trigger release workflow v0.0.6 (retry with upload fix) 2026-02-26
+## [v0.0.6]
 
 
 - ci(release): sanitize GitHub upload_url template before uploading assets
 
 
 
-## [v0.0.5] - tag v0.0.5 Tagger: Giovanni Lauria <giovanni.lauria@gmail.com>  ci: trigger release workflow v0.0.5 2026-02-26
+## [v0.0.5]
 
 
 - ci(release): include release notes in packaging; expose release body output
 
 
 
-## [v0.0.4] - tag v0.0.4 Tagger: Giovanni Lauria <giovanni.lauria@gmail.com>  recreate tag to retrigger CI 2026-02-26
+## [v0.0.4]
 
 
 - build: use Maven profile 'outputs' and write artifacts to outputs/; update scripts
@@ -87,7 +75,7 @@ Versioning.
 
 
 
-## [v0.0.3] - tag v0.0.3 Tagger: Giovanni Lauria <giovanni.lauria@gmail.com>  rerun release v0.0.3 2026-02-26
+## [v0.0.3]
 
 
 - ci(windows): add jar-only fallback when jlink packaging fails
@@ -96,7 +84,7 @@ Versioning.
 
 
 
-## [v0.0.2] - tag v0.0.2 Tagger: Giovanni Lauria <giovanni.lauria@gmail.com>  rerun release v0.0.2 2026-02-26
+## [v0.0.2]
 
 
 - ci: extract workflow scripts and call external scripts; make scripts executable on runners
@@ -129,8 +117,6 @@ Versioning.
 
 - docs: add JAVA_HOME setup instructions for Maven Wrapper
 
-- docs: document Maven Wrapper usage in CONTRIBUTING and development docs
-
 - chore: add Maven Wrapper (mvnw) to enforce Maven requirement
 
 - chore: remove .github and start fresh
@@ -143,7 +129,7 @@ Versioning.
 
 
 
-## [v0.0.1] - tag v0.0.1 Tagger: Giovanni Lauria <giovanni.lauria@gmail.com>  v0.0.1 2026-02-26
+## [v0.0.1]
 
 
 - Initial commit
@@ -151,6 +137,24 @@ Versioning.
 - chore: add Java simulator project, docs, CI, and repo cleanup
 
 - chore: add Java simulator project, docs, CI, and repo cleanup
+
+
+
+## [Unreleased]
+
+- chore(scripts): place newest tag first and append Unreleased section
+
+- chore(scripts): changelog headings use tag-only (no date)
+
+- chore(release): update CHANGELOG for 0.0.12
+
+- chore(scripts): intercept v* tags in pre-push and make tag_release recreate annotated tags; commit changelog only if changed
+
+- chore(scripts): add changelog updater and release helpers; block direct tag pushes via .githooks/pre-push
+
+- chore: save changes
+
+- chore: consolidate CONTRIBUTING.md and remove duplicates
 
 
 
