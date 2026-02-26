@@ -136,6 +136,22 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`.
 - Ensure `./mvnw test` (or `mvnw.cmd test` on Windows) passes locally before opening a PR.
 - Rebase or merge the latest `main` to keep PRs up to date.
 
+### Git hooks (optional, recommended)
+
+This repository includes sample Git hooks in `.githooks/` to run a quick build before committing. To enable them locally, set Git's `core.hooksPath` to the provided folder:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+On Windows (PowerShell):
+
+```powershell
+git config core.hooksPath .githooks
+```
+
+The hooks will run the Maven Wrapper (or `mvn` if the wrapper is not present) and abort the commit if the build fails. Enabling hooks is a local preference and is not forced by the repository.
+
 CI runs tests on each PR. Fix any CI failures before requesting review.
 
 ## Testing

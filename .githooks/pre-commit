@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Pre-commit hook: compile and run quick tests to catch obvious errors
+set -e
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+cd "$ROOT_DIR"
+
+# Prefer Maven Wrapper
+if [ -x ./mvnw ]; then
+  MVN=./mvnw
+elif [ -x ./mvnw.cmd ]; then
+  MVN=./mvnw.cmd
+else
+  MVN=mvn
+fi
+
+echo "[pre-commit] Running quick build checks with $MVN"
+# Quick build (compile) — faster than running full tests
+$MVN -q -DskipTests package
+
+echo "[pre-commit] Build OK"
+exit 0
