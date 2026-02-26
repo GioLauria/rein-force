@@ -15,10 +15,8 @@ echo Building with revision=%TAG%
 rem Ensure we run the Maven wrapper from the repository root (script is in /scripts)
 pushd "%~dp0.."
 
-rem Create outputs directory for Maven build output
-if not exist outputs mkdir outputs
-
-call mvnw.cmd -DskipTests -Drevision=%TAG% -Poutputs package
+rem Build using default Maven output directory (`target/`)
+call mvnw.cmd -DskipTests -Drevision=%TAG% package
 set "RC=%errorlevel%"
 
 popd

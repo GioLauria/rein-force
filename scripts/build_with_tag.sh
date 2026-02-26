@@ -18,9 +18,8 @@ echo "Building with revision=$TAG"
 # Run the Maven wrapper from the repository root (script lives in /scripts)
 pushd "$(dirname "$0")/.." >/dev/null
 
-# Ensure outputs directory exists and instruct Maven to use it as build directory
-mkdir -p outputs
-./mvnw -DskipTests -Drevision="$TAG" -Poutputs package
+# Build using default Maven output directory (target/)
+./mvnw -DskipTests -Drevision="$TAG" package
 RC=$?
 popd >/dev/null
 exit $RC
