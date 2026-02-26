@@ -38,8 +38,7 @@ if (-not $commits) {
 # tags newest first
 for ($i = $tags.Count - 1; $i -ge 0; $i--) {
   $t = $tags[$i]
-  $date = git show -s --format=%ad --date=short $t 2>$null
-  Add-Content $out "## [$t] - $date`n`n"
+  Add-Content $out "## [$t]`n`n"
   if ($i -gt 0) {
     $prev = $tags[$i-1]
     $commits = git log --pretty=format:%s "$prev..$t" 2>$null

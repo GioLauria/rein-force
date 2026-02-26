@@ -46,8 +46,7 @@ echo "" >> "$TMP"
 # list tags newest first
 for (( idx=${#tags[@]}-1; idx>=0; idx-- )); do
   t=${tags[idx]}
-  date=$(git show -s --format=%ad --date=short "$t" 2>/dev/null || echo "")
-  echo "## [$t] - $date" >> "$TMP"
+  echo "## [$t]" >> "$TMP"
   echo "" >> "$TMP"
   if [ $idx -gt 0 ]; then
     prev=${tags[idx-1]}
