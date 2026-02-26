@@ -55,14 +55,28 @@ cd rein-force
 
 2. Build and run tests:
 
-```bash
-mvn clean test
+The project includes the Maven Wrapper so you do not need a local Maven installation.
+
+On Windows:
+
+```powershell
+# Run the test suite
+mvnw.cmd test
+
+# Build without running tests
+mvnw.cmd -DskipTests package
 ```
 
-3. Produce an executable JAR:
+On macOS / Linux:
 
 ```bash
-mvn -DskipTests package
+# Run the test suite
+./mvnw test
+
+# Build without running tests
+./mvnw -DskipTests package
+
+# Run the produced JAR
 java -jar target/rein-force-sim-0.1.0.jar
 ```
 
@@ -89,7 +103,7 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`.
 - Describe the change, motivation, and any trade-offs.
 - Add or update tests where appropriate.
 - Update documentation when behavior changes.
-- Ensure `mvn clean test` passes locally before opening a PR.
+- Ensure `./mvnw test` (or `mvnw.cmd test` on Windows) passes locally before opening a PR.
 - Rebase or merge the latest `main` to keep PRs up to date.
 
 CI runs tests on each PR. Fix any CI failures before requesting review.

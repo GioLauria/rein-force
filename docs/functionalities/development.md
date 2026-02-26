@@ -4,16 +4,21 @@ Responsibility: build, run and IDE setup for contributors.
 
 Requirements
 - Java 17 or later
-- Maven 3.6+
+- Maven 3.6+ (or use the included Maven Wrapper)
+
+Using the Maven Wrapper
+- The project includes the Maven Wrapper so contributors don't need Maven pre-installed.
+- On Windows use: `mvnw.cmd test` or `mvnw.cmd -DskipTests package`.
+- On macOS/Linux use: `./mvnw test` or `./mvnw -DskipTests package`.
 
 Common commands
 
 ```bash
-# Run tests
-mvn test
+# Run tests (wrapper)
+./mvnw test
 
-# Build artifact without tests
-mvn -DskipTests package
+# Build artifact without tests (wrapper)
+./mvnw -DskipTests package
 
 # Run the application
 java -jar target/rein-force-sim-0.1.0.jar
