@@ -36,6 +36,24 @@ Run tests:
 # or on Windows: mvnw.cmd test
 ```
 
+Build with repository revision
+
+To build and embed the current Git tag or commit in the JAR manifest use the helper scripts in `scripts/`:
+
+Windows (Command Prompt / PowerShell):
+
+```powershell
+scripts\build_with_tag.bat
+```
+
+macOS / Linux:
+
+```bash
+./scripts/build_with_tag.sh
+```
+
+The scripts set the `Implementation-Version` manifest entry to the latest tag when available, otherwise the short commit id, and finally `unknown` if Git data is unavailable.
+
 Run from your IDE:
 
 - Open the project as a Maven project in IntelliJ IDEA or Eclipse.

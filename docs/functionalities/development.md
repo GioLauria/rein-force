@@ -55,6 +55,24 @@ echo $JAVA_HOME  # or on Windows: echo %JAVA_HOME%
 java -version
 ```
 
+Build with repository revision
+
+You can build the project and embed the current Git tag/commit into the JAR's manifest by using the helper scripts in `scripts/`.
+
+- Windows:
+
+```cmd
+scripts\build_with_tag.bat
+```
+
+- macOS / Linux:
+
+```bash
+./scripts/build_with_tag.sh
+```
+
+The scripts will attempt to use the latest Git tag as the `Implementation-Version` manifest entry and fall back to the short commit id or `unknown` when no tag is available.
+
 IDE tips
 - IntelliJ: Open the project as a Maven project. Use `Run` on `AppLauncher` or create an artifact.
 - Eclipse: `Import -> Existing Maven Projects`.
