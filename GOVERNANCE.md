@@ -1,6 +1,8 @@
 # Governance
 
-> Template note: update roles, decision process, and contact info.
+This repository is maintained by the Rein-Force maintainers listed below. The
+governance model is lightweight: maintainers review contributions, approve
+releases, and make final decisions when consensus cannot be reached.
 
 ## Roles
 
@@ -20,4 +22,6 @@
 
 ## Contact
 
-For governance questions, contact: contact@project.example
+Maintainers: Gio Lauria (@GioLauria)
+
+For governance or release questions: giovanni.lauria@gmail.com

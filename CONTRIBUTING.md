@@ -2,7 +2,7 @@
 
 Thanks for your interest in contributing!
 
-> Template note: update placeholders (project name, language, tooling) before publishing.
+
 
 ## Ways to contribute
 
@@ -17,15 +17,18 @@ Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Development setup
 
-1. Fork and clone the repo.
-2. Install dependencies (TBD).
-3. Run tests (TBD).
+1. Fork the repository and clone your fork. Example (replace with your fork URL):
+
+```bash
+git clone https://github.com/GioLauria/rein-force.git
+cd rein-force
+```
 
 ## Branching and commits
 
 - Use short, descriptive branch names.
 - Keep commits focused and small.
-- Use clear commit messages (TBD).
+- Use clear, conventional commit messages (see "Commit message format" below).
 
 # Contributing
 
