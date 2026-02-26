@@ -26,6 +26,27 @@ This page collects common problems and quick fixes contributors may encounter.
 - Run: `java -jar target/rein-force-sim-0.1.0.jar`.
 - If headless environment (remote server), the Swing GUI will not display — run locally with a display.
 
+## Running detached (background)
+- Windows PowerShell: use `Start-Process` to launch the JAR in a new process and return immediately:
+
+```powershell
+Start-Process -FilePath 'java' -ArgumentList '-jar','target\\rein-force-sim-0.1.0.jar' -PassThru
+```
+
+- Windows CMD: `start javaw -jar target\rein-force-sim-0.1.0.jar` uses `javaw` to avoid a console window.
+
+- macOS / Linux: use `nohup` and background the process:
+
+```bash
+nohup java -jar target/rein-force-sim-0.1.0.jar > /dev/null 2>&1 &
+disown
+```
+
+After starting detached, find the process and stop it when needed:
+
+- Windows (PowerShell): `Get-Process | Where-Object {$_.ProcessName -match "java"}` then `Stop-Process -Id <PID>`
+- macOS / Linux: `ps aux | grep rein-force-sim` then `kill <PID>`
+
 ## Windows: file locked / failed to delete target files
 - Symptom: `Failed to delete ... target/test-classes ...` during `mvn clean`.
 - Fixes:

@@ -44,6 +44,50 @@ Run from your IDE:
 Notes:
 - The Maven Wrapper requires `JAVA_HOME` to point to a JDK. See `CONTRIBUTING.md` or `docs/functionalities/development.md` for instructions to set `JAVA_HOME` if you see a "JAVA_HOME not found" error.
 
+Running the JAR (foreground vs detached)
+
+Foreground (shows console output, blocks current terminal):
+
+Windows (PowerShell):
+
+```powershell
+$env:JAVA_HOME = 'C:\Program Files\Java\jdk-XX'  # session-only
+java -jar target\rein-force-sim-0.1.0.jar
+```
+
+macOS / Linux:
+
+```bash
+export JAVA_HOME="/path/to/jdk"  # session-only
+java -jar target/rein-force-sim-0.1.0.jar
+```
+
+Detached / background (returns immediately):
+
+Windows (PowerShell — detached):
+
+```powershell
+# Start in a new process and return immediately. Capture PID if desired:
+Start-Process -FilePath 'java' -ArgumentList '-jar','target\\rein-force-sim-0.1.0.jar' -PassThru
+```
+
+Windows (Command Prompt — detached):
+
+```cmd
+start javaw -jar target\rein-force-sim-0.1.0.jar
+```
+
+macOS / Linux (detached):
+
+```bash
+nohup java -jar target/rein-force-sim-0.1.0.jar > /dev/null 2>&1 &
+disown
+```
+
+Notes:
+- Ensure you run the commands from the project root (the folder containing `pom.xml`).
+- To stop a detached process, locate its PID (`ps` / Task Manager) and terminate it.
+
 Controls:
 - Play: resume simulation
 - Stop: pause simulation
