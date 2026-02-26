@@ -26,6 +26,13 @@ This page collects common problems and quick fixes contributors may encounter.
 - Run: `java -jar target/rein-force-sim-0.1.0.jar`.
 - If headless environment (remote server), the Swing GUI will not display — run locally with a display.
 
+## GUI stats incorrect or missing
+- If the overlay showing Iterations / Average duration / Last duration does not appear or shows unexpected values:
+  - Ensure the application actually started (check console or process list).
+  - Verify there are no exceptions in the application's console output — timing metrics are updated on successful iterations.
+  - If running in a headless or remote environment, the Swing UI (and overlay) will not render — run locally with a display.
+  - For intermittent or unexpected long durations, run the simulator under a profiler or check for GC pauses or heavy I/O.
+
 ## Running detached (background)
 - Windows PowerShell: use `Start-Process` to launch the JAR in a new process and return immediately:
 

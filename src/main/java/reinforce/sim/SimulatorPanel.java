@@ -52,5 +52,18 @@ public class SimulatorPanel extends JPanel {
         Point a = env.getAgent();
         g.setColor(Color.RED);
         g.fillOval(a.x * cell + cell/6, a.y * cell + cell/6, cell*2/3, cell*2/3);
+
+        // overlay stats (top-left)
+        String stats = String.format("Iterations: %d  Avg: %.2f ms  Last: %d ms  Points: %.1f",
+            sim.getIterations(), sim.getAvgDurationMs(), sim.getLastDurationMs(), sim.getTotalPoints());
+        java.awt.FontMetrics fm = g.getFontMetrics();
+        int textW = fm.stringWidth(stats);
+        int textH = fm.getHeight();
+        int pad = 6;
+        int bx = 6, by = 6;
+        g.setColor(Color.WHITE);
+        g.fillRect(bx, by, textW + pad, textH + pad/2);
+        g.setColor(Color.BLACK);
+        g.drawString(stats, bx + 4, by + fm.getAscent());
     }
 }

@@ -92,3 +92,12 @@ Controls:
 - Play: resume simulation
 - Stop: pause simulation
 - Restart: new environment with random A, B, obstacles
+
+GUI status overlay:
+
+- **Iterations:** number of training/steps completed since the current run started.
+- **Average duration:** moving average of iteration durations (ms) shown to help gauge performance.
+- **Last duration:** duration (ms) of the most recent iteration.
+
+These three values are displayed at the top of the GUI while the simulator runs.
+They are useful for checking performance regressions (longer iteration times) and ensuring the environment is progressing.

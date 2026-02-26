@@ -10,11 +10,12 @@ IF EXIST mvnw.cmd (
   set MVN=mvn
 )
 
-echo [pre-commit] Running quick build check with %MVN%
-%MVN% -q -DskipTests package
+echo [pre-commit] Running full package build with %MVN% (this may run tests)
+%MVN% package
 IF %ERRORLEVEL% NEQ 0 (
-  echo [pre-commit] Build failed — aborting commit
-  exit /b 1
+  echo [pre-commit] Build failed (exit %ERRORLEVEL%) — aborting commit
+  endlocal
+  exit /b %ERRORLEVEL%
 )
 
 echo [pre-commit] Build OK

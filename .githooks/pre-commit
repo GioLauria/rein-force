@@ -13,9 +13,15 @@ else
   MVN=mvn
 fi
 
-echo "[pre-commit] Running quick build checks with $MVN"
-# Quick build (compile) — faster than running full tests
-$MVN -q -DskipTests package
+echo "[pre-commit] Running full package build with $MVN (this may run tests)"
+# Run full package to ensure commits always produce a working package
+"$MVN" package
+
+RC=$?
+if [ $RC -ne 0 ]; then
+  echo "[pre-commit] Build failed (exit $RC) — aborting commit"
+  exit $RC
+fi
 
 echo "[pre-commit] Build OK"
 exit 0

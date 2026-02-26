@@ -1,0 +1,106 @@
+name: Build release packages on tag
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      release_id: ${{ steps.create_release.outputs.id }}
+    steps:
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          body: Automated build artifacts for ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build_and_upload:
+    needs: create_release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Build with Maven
+        run: |
+          if [ -f mvnw ]; then ./mvnw -DskipTests package; elif [ -f mvnw.cmd ]; then ./mvnw.cmd -DskipTests package; else mvn -DskipTests package; fi
+        shell: bash
+
+      - name: Create runtime image and package
+        run: |
+          set -e
+          # prepare folders
+          rm -rf image release
+          mkdir -p image/app image/bin
+
+          # create a minimal runtime image including desktop support
+          "$JAVA_HOME/bin/jlink" --add-modules java.base,java.desktop --compress=2 --no-header-files --no-man-pages --output image/runtime
+
+          # copy jar
+          cp target/*.jar image/app/rein-force-sim.jar
+
+          # create run scripts
+          cat > image/bin/run.sh <<'SH'
+          #!/usr/bin/env sh
+          DIR="$(cd "$(dirname "$0")/.." && pwd)"
+          "$DIR/runtime/bin/java" -jar "$DIR/app/rein-force-sim.jar" "$@"
+          SH
+          chmod +x image/bin/run.sh
+
+          cat > image/bin/run.bat <<'BAT'
+          @echo off
+          set DIR=%~dp0\..
+          %DIR%\runtime\bin\java -jar %DIR%\app\rein-force-sim.jar %*
+          BAT
+
+          # create platform-specific archive
+          mkdir -p release
+          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
+            cd image
+            zip -r ../release/rein-force-${{ github.ref_name }}-linux.zip .
+          else
+            # on Windows use powershell to compress
+            powershell -Command "Compress-Archive -Path image\\* -DestinationPath release\\rein-force-${{ github.ref_name }}-windows.zip -Force"
+          fi
+        shell: bash
+
+      - name: Upload release asset (Linux)
+        if: matrix.os != 'windows-latest'
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: release/rein-force-${{ github.ref_name }}-linux.zip
+          asset_name: rein-force-${{ github.ref_name }}-linux.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload release asset (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: release/rein-force-${{ github.ref_name }}-windows.zip
+          asset_name: rein-force-${{ github.ref_name }}-windows.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -61,3 +61,12 @@ IDE tips
 
 Formatting and CI
 - Optionally add a Java formatter (e.g., google-java-format) and configure a Maven plugin for CI checks.
+
+GUI statistics overlay
+
+- The simulator GUI now shows a small overlay at the top of the window with three live metrics:
+	- **Iterations:** total iterations/steps completed in the current run.
+	- **Average duration:** moving average of iteration durations in milliseconds (useful for spotting slowdowns).
+	- **Last duration:** duration in milliseconds of the most recent iteration.
+
+These metrics are updated on the Swing event thread and are intended for quick, local performance checks while developing or running experiments.

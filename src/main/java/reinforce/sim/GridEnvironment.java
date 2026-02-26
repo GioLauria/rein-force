@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class GridEnvironment {
-    public enum StepResult { CONTINUE, COLLISION, GOAL }
+    public enum StepResult { CONTINUE, COLLISION, WALL, GOAL }
 
     private final int size;
     private final boolean[][] obstacles;
@@ -75,7 +75,16 @@ public class GridEnvironment {
             case 2 -> np.y = Math.min(size - 1, np.y + 1);
             case 3 -> np.x = Math.max(0, np.x - 1);
         }
-        // collision
+        // wall (attempted move outside bounds results in no position change)
+        boolean attemptedOutOfBounds = (action == 0 && agent.y == 0)
+                || (action == 1 && agent.x == size - 1)
+                || (action == 2 && agent.y == size - 1)
+                || (action == 3 && agent.x == 0);
+        if (attemptedOutOfBounds && np.equals(agent)) {
+            return StepResult.WALL;
+        }
+
+        // collision with obstacle
         if (obstacles[np.y][np.x]) {
             agent = new Point(start);
             return StepResult.COLLISION;
