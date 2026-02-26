@@ -4,10 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.reinforce</groupId>
     <artifactId>rein-force-sim</artifactId>
-    <version>0.1.0</version>
+    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <properties>
+        <!-- revision can be overridden with -Drevision=$(git describe --tags --abbrev=0) -->
+        <revision>0.1.0</revision>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,6 +40,9 @@
                         <manifest>
                             <mainClass>reinforce.sim.AppLauncher</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Implementation-Version>${revision}</Implementation-Version>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
