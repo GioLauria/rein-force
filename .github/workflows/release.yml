@@ -30,34 +30,33 @@ jobs:
           node .github/scripts/generate-release-notes.js > release_notes.txt || true
           echo "----"; echo "Release notes:"; cat release_notes.txt || true
 
-      - name: Update CHANGELOG.md
+        - name: Update CHANGELOG.md
         env:
           TAG: ${{ github.ref_name }}
         run: |
           DATE=$(date -u +%F)
-          NOTES=$(cat release_notes.txt || true)
+          export DATE
+          export NOTES="$(cat release_notes.txt || true)"
           python - <<PY
-import sys,os
-tag=os.environ.get('TAG','unknown')
-date=os.environ.get('DATE','')
-notes=os.environ.get('NOTES')
-if notes is None:
-    notes=''
-with open('CHANGELOG.md','r',encoding='utf-8') as f:
-    content=f.read()
-new_section=f"## [{tag}] - {DATE}\n\n{NOTES}\n\n"
-if f"## [{tag}]" in content:
-    print('Changelog already contains this tag, skipping update')
-    sys.exit(0)
-if '## [Unreleased]' in content:
-    parts=content.split('## [Unreleased]',1)
-    out=parts[0] + '## [Unreleased]' + '\n\n' + new_section + parts[1].lstrip()
-else:
-    out=new_section + content
-with open('CHANGELOG.md','w',encoding='utf-8') as f:
-    f.write(out)
-print('CHANGELOG.md updated')
-PY
+    import sys, os
+    tag = os.environ.get('TAG', 'unknown')
+    date = os.environ.get('DATE', '')
+    notes = os.environ.get('NOTES', '')
+    with open('CHANGELOG.md', 'r', encoding='utf-8') as f:
+      content = f.read()
+    new_section = f"## [{tag}] - {date}\n\n{notes}\n\n"
+    if f"## [{tag}]" in content:
+      print('Changelog already contains this tag, skipping update')
+      sys.exit(0)
+    if '## [Unreleased]' in content:
+      parts = content.split('## [Unreleased]', 1)
+      out = parts[0] + '## [Unreleased]' + '\n\n' + new_section + parts[1].lstrip()
+    else:
+      out = new_section + content
+    with open('CHANGELOG.md', 'w', encoding='utf-8') as f:
+      f.write(out)
+    print('CHANGELOG.md updated')
+    PY
 
       - name: Commit and push CHANGELOG.md
         run: |
