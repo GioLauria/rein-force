@@ -14,27 +14,11 @@ All notable changes to this project will be documented in this file.
 The format is based on Keep a Changelog, and this project adheres to Semantic
 Versioning.
 
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on Keep a Changelog, and this project adheres to Semantic
-Versioning.
-
-EOF
-cat > "$TMP" <<'EOF'
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on Keep a Changelog, and this project adheres to Semantic
-Versioning.
-
 EOF
 
 tags=( $(git tag --list 'v*' --sort=version:refname) )
 
-# If we have tags, list them newest-first first so the top-most tag is the
+# If we have tags, list them newest-first so the top-most tag is the
 # latest pushed tag. We'll then add an Unreleased section showing commits
 # since the latest tag.
 if [ ${#tags[@]} -gt 0 ]; then
@@ -44,17 +28,32 @@ if [ ${#tags[@]} -gt 0 ]; then
     echo "" >> "$TMP"
     if [ $idx -gt 0 ]; then
       prev=${tags[idx-1]}
-      commits=$(git log --pretty=format:%s "$prev..$t" || true)
+      range="$prev..$t"
     else
-      commits=$(git log --pretty=format:%s --reverse "$t" || true)
+      range="$t"
     fi
+    # use full commit body (%B) and separate commits by a sentinel
+    commits=$(git log --pretty=format:%B"<<COMMIT>>" "$range" || true)
     if [ -z "$commits" ]; then
       echo "- No changes recorded." >> "$TMP"
     else
-      while IFS= read -r line; do
-        [ -z "$line" ] && continue
-        echo "- $line" >> "$TMP"
-      done <<< "$commits"
+      IFS='<<COMMIT>>'
+      for block in $commits; do
+        # trim leading/trailing whitespace
+        block=$(echo "$block" | sed -e 's/^\s\+//' -e 's/\s\+$//')
+        [ -z "$block" ] && continue
+        # first non-empty line is the subject
+        subject=$(echo "$block" | awk 'NF{print; exit}')
+        echo "- $subject" >> "$TMP"
+        # remaining lines as blockquote to preserve paragraphs in GitHub
+        body=$(echo "$block" | sed -n '2,$p' | sed -e 's/^/> /')
+        if [ -n "$(echo "$body" | sed -e '/^> \s*$/d')" ]; then
+          echo "" >> "$TMP"
+          printf "%s\n" "$body" >> "$TMP"
+          echo "" >> "$TMP"
+        fi
+      done
+      unset IFS
     fi
     echo "" >> "$TMP"
   done
@@ -68,18 +67,28 @@ fi
 echo "## [Unreleased]" >> "$TMP"
 echo "" >> "$TMP"
 if [ -n "$latest_tag" ]; then
-  commits=$(git log --pretty=format:%s "$latest_tag..HEAD" || true)
+  range="$latest_tag..HEAD"
 else
-  commits=$(git log --pretty=format:%s --reverse HEAD || true)
+  range="HEAD"
 fi
-
+commits=$(git log --pretty=format:%B"<<COMMIT>>" "$range" || true)
 if [ -z "$commits" ]; then
   echo "- Placeholder for upcoming changes." >> "$TMP"
 else
-  while IFS= read -r line; do
-    [ -z "$line" ] && continue
-    echo "- $line" >> "$TMP"
-  done <<< "$commits"
+  IFS='<<COMMIT>>'
+  for block in $commits; do
+    block=$(echo "$block" | sed -e 's/^\s\+//' -e 's/\s\+$//')
+    [ -z "$block" ] && continue
+    subject=$(echo "$block" | awk 'NF{print; exit}')
+    echo "- $subject" >> "$TMP"
+    body=$(echo "$block" | sed -n '2,$p' | sed -e 's/^/> /')
+    if [ -n "$(echo "$body" | sed -e '/^> \s*$/d')" ]; then
+      echo "" >> "$TMP"
+      printf "%s\n" "$body" >> "$TMP"
+      echo "" >> "$TMP"
+    fi
+  done
+  unset IFS
 fi
 
 echo "" >> "$TMP"
