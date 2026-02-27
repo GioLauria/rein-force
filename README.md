@@ -72,6 +72,6 @@ Reinforcement-learning rules (local simulator behaviour)
 	- Reaching the goal `B`: +100 points (episode end).
 - Session scoring: a running `totalPoints` is kept; if it drops below zero the environment resets (randomizing obstacles and positions).
 - Visual: the bot leaves a visited trail on cells it traverses.
-- Timing: the bot performs 2 moves per second (configurable in the simulator).
+- Timing: the bot performs 4 moves per second by default (configurable via `Simulator#setMovesPerSecond(int)`).
 
 If you want a different release workflow or tag naming convention, update `scripts/tag_release.sh` and corresponding PowerShell script accordingly.

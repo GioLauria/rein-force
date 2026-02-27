@@ -13,15 +13,32 @@ public class Simulator {
     private long lastDurationMs = 0;
     private double totalPoints = 0.0;
     private final int initialObstacleCount;
-    private static final int DEFAULT_TIMER_MS = 500; // 2 moves per second
+    private static final int DEFAULT_MOVES_PER_SECOND = 4;
+    private int movesPerSecond = DEFAULT_MOVES_PER_SECOND; // configurable
     private int lastAction = -1; // track previous action to avoid immediate backtracking
 
     public Simulator(int gridSize, int obstacleCount) {
+        this(gridSize, obstacleCount, DEFAULT_MOVES_PER_SECOND);
+    }
+
+    public Simulator(int gridSize, int obstacleCount, int movesPerSecond) {
         this.env = new GridEnvironment(gridSize, obstacleCount);
         this.agent = new QLearningAgent(env.getWidth() * env.getHeight());
         this.initialObstacleCount = obstacleCount;
-        this.timer = new Timer(DEFAULT_TIMER_MS, e -> step());
+        setMovesPerSecond(movesPerSecond);
+        int delay = Math.max(1, 1000 / this.movesPerSecond);
+        this.timer = new Timer(delay, e -> step());
         resetStats();
+    }
+
+    public int getMovesPerSecond() { return movesPerSecond; }
+    public void setMovesPerSecond(int movesPerSecond) {
+        if (movesPerSecond <= 0) movesPerSecond = 1;
+        this.movesPerSecond = movesPerSecond;
+        if (this.timer != null) {
+            int delay = Math.max(1, 1000 / this.movesPerSecond);
+            this.timer.setDelay(delay);
+        }
     }
 
     public void setView(SimulatorPanel v) { this.view = v; }
