@@ -1,0 +1,3 @@
+#!/bin/sh
+# Run changelog updater after each commit (POSIX hook entrypoint)
+scripts/post_commit_update_changelog.sh || true
