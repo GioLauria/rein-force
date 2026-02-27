@@ -18,4 +18,9 @@ scripts\run.bat detach
 
 - **Notes:**
   - Uses `./mvnw` or `mvn` as available.
+  - The script now determines the revision (latest `v*` tag or short commit SHA)
+    and passes it to Maven as `-Drevision=<rev>` so the build reflects the
+    repository's release revision.
+  - The produced JAR under `target/` is located and executed, so the script
+    no longer relies on a fixed artifact filename.
   - On Windows the detached mode uses `javaw`.
