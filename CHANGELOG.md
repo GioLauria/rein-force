@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): deduplicate Unreleased entries and remove commit ids (7371765)
+
+
 - chore(changelog): add multiple commits to Unreleased
 - chore(release): finalize hooks, changelog and release scripts
 - chore(hooks): install post-commit hook and document it; clean changelog
