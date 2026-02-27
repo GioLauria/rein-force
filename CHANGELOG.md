@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): add e425602 to Unreleased (bb143dd)
+
+
 chore(changelog): add ea64ba8 to Unreleased (e425602)
 
 
