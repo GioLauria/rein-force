@@ -11,7 +11,7 @@ Provide a concise map of responsibilities and runtime interactions so contributo
 - `AppLauncher` — application entry point; composes the UI and starts the simulator.
 - `Simulator` — orchestration and runtime loop (uses a `javax.swing.Timer`); owns the `GridEnvironment` and `QLearningAgent`; holds a reference to the view (`SimulatorPanel`) and exposes control methods used by `ControlPanel`.
 - `GridEnvironment` — world model: grid size, obstacles, start/goal/agent positions and per-cell scores; exposes `step(action)` and helpers to read/set cell scores and positions.
-- `QLearningAgent` — Q-table, action selection (`chooseAction`, `chooseActionWithAttraction`) and learning update (`update`). Agent is stateless relative to the environment aside from numeric state IDs.
+-- `QLearningAgent` — Q-table and learning update (`update`). Action selection is performed by the runtime (`Simulator`) by combining Q-values with neighbor attraction scores and sampling via the `Randomizer` (softmax). The agent remains decoupled from environment internals via numeric state IDs.
 - `SimulatorPanel` — Swing `JPanel` renderer: paints grid, obstacles, start/goal/agent, heatmap from cell scores and overlay stats. Passive view; repainted by `Simulator`.
 - `ControlPanel` — simple UI with Play/Stop/Restart buttons that call `Simulator` methods.
 
@@ -20,7 +20,7 @@ Provide a concise map of responsibilities and runtime interactions so contributo
 1. `AppLauncher` creates `Simulator(gridSize, obstacleCount)`, `SimulatorPanel(sim)` and `ControlPanel(sim)`, shows the UI, sets `sim.setView(panel)` and calls `sim.start()`.
 2. `Simulator`'s `Timer` fires and calls `step()`:
    - Read `state = env.stateIndexAgent()` and neighbor cell scores via `env.getCellScore(...)`.
-   - Ask `agent` for an action (`chooseActionWithAttraction(...)`).
+   - Compute combined per-action values (Q + neighbor attraction) and sample an action via `Randomizer.sampleSoftmax(...)`.
    - Execute action via `env.step(action)` → returns `StepResult` (CONTINUE, COLLISION, WALL, GOAL).
    - Compute `reward`, call `agent.update(state, action, reward, nextState, done)`.
    - Update per-cell score via `env.setCellScore(...)`, update stats and `view.repaint()`.

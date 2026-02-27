@@ -11,6 +11,7 @@ participant AppLauncher
 participant Simulator
 participant GridEnvironment
 participant QLearningAgent
+participant Randomizer
 participant SimulatorPanel
 participant ControlPanel
 
@@ -24,8 +25,8 @@ note over Simulator: Timer started (EDT)
 loop Each timer tick
     Simulator->GridEnvironment: state = stateIndexAgent()
     Simulator->GridEnvironment: neighborScores[] = getCellScore(...) (up,right,down,left)
-    Simulator->QLearningAgent: chooseActionWithAttraction(state, neighborScores, weight)
-    QLearningAgent->Simulator: action
+    Simulator->Randomizer: sampleSoftmax(combined)
+    Randomizer->Simulator: action
     Simulator->GridEnvironment: step(action)
     GridEnvironment->Simulator: StepResult (CONTINUE | COLLISION | WALL | GOAL)
     Simulator->QLearningAgent: update(state, action, reward, nextState, done)

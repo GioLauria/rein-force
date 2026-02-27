@@ -12,7 +12,7 @@ Key methods
 - `chooseAction(state)` — epsilon-greedy selection.
 - `update(s,a,reward,sNext,done)` — Q-value update rule.
 
- Timing: the bot performs 4 moves per second by default; this is configurable via the `Simulator` API (`setMovesPerSecond`).
+ Timing: the bot performs 20 moves per second by default; this is configurable via the `Simulator` API (`setMovesPerSecond`).
 - The agent is prevented from immediately backtracking to its previous cell unless that reverse move is the only unblocked option.
 - The environment tracks a visited trail for display and attraction purposes.
 - Session-level `totalPoints` is tracked; if it becomes negative the simulator resets (randomizes obstacles and positions).
