@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+docs: update architecture and diagrams to match runtime (Randomizer, defaults) (5f0f44f)
+
+
 chore(clean): remove unused methods (81af758)
 
 
