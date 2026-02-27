@@ -13,11 +13,12 @@ public class Simulator {
     private long lastDurationMs = 0;
     private double totalPoints = 0.0;
     private final int initialObstacleCount;
-    private static final int DEFAULT_TIMER_MS = 50;
+    private static final int DEFAULT_TIMER_MS = 500; // 2 moves per second
+    private int lastAction = -1; // track previous action to avoid immediate backtracking
 
     public Simulator(int gridSize, int obstacleCount) {
         this.env = new GridEnvironment(gridSize, obstacleCount);
-        this.agent = new QLearningAgent(gridSize * gridSize);
+        this.agent = new QLearningAgent(env.getWidth() * env.getHeight());
         this.initialObstacleCount = obstacleCount;
         this.timer = new Timer(DEFAULT_TIMER_MS, e -> step());
         resetStats();
@@ -45,29 +46,66 @@ public class Simulator {
         // directions: up, right, down, left
         int[] dx = {0, 1, 0, -1};
         int[] dy = {-1, 0, 1, 0};
-        int maxIdx = env.getSize() - 1;
+        int maxX = env.getWidth() - 1;
+        int maxY = env.getHeight() - 1;
         for (int i = 0; i < 4; i++) {
-            int nx = Math.max(0, Math.min(maxIdx, ap.x + dx[i]));
-            int ny = Math.max(0, Math.min(maxIdx, ap.y + dy[i]));
-            neighborScores[i] = env.getCellScore(nx, ny);
+            int nx = ap.x + dx[i];
+            int ny = ap.y + dy[i];
+            if (nx < 0 || nx > maxX || ny < 0 || ny > maxY) {
+                neighborScores[i] = Double.NEGATIVE_INFINITY; // out-of-bounds
+            } else {
+                neighborScores[i] = env.getCellScore(nx, ny);
+            }
         }
 
         double attractionWeight = 0.5; // moderate bias towards higher-scored cells
         int action = agent.chooseActionWithAttraction(state, neighborScores, attractionWeight);
+        // enforce "cannot go back unless blocked": if chosen action is reverse of lastAction
+        if (lastAction != -1) {
+            int reverse = (lastAction + 2) % 4;
+            int nx = ap.x + dx[reverse];
+            int ny = ap.y + dy[reverse];
+            boolean reverseBlocked = (nx < 0 || nx > maxX || ny < 0 || ny > maxY) || env.isObstacle(nx, ny);
+            if (action == reverse && !reverseBlocked) {
+                // find best alternative action (q + attraction) excluding reverse
+                double[] qrow = agent.getQ()[state];
+                double bestVal = Double.NEGATIVE_INFINITY;
+                int bestAction = action; // fallback
+                for (int a = 0; a < 4; a++) {
+                    if (a == reverse) continue;
+                    int tx = ap.x + dx[a];
+                    int ty = ap.y + dy[a];
+                    if (tx < 0 || tx > maxX || ty < 0 || ty > maxY) continue;
+                    if (env.isObstacle(tx, ty)) continue;
+                    double val = qrow[a] + attractionWeight * neighborScores[a];
+                    if (val > bestVal) {
+                        bestVal = val;
+                        bestAction = a;
+                    }
+                }
+                action = bestAction;
+            }
+        }
         GridEnvironment.StepResult result = env.step(action);
         int nextState = env.stateIndexAgent();
         boolean done = false;
         double reward = 0.0;
         switch (result) {
             case CONTINUE:
-                reward = 10.0; // ordinary move
+                // moved to an empty/valid cell
+                reward = 10.0;
+                // increase the destination cell's score so agent can prefer higher cells
+                java.awt.Point newPos = env.getAgent();
+                double prevVal = env.getCellScore(newPos.x, newPos.y);
+                env.setCellScore(newPos.x, newPos.y, prevVal + 10.0);
                 break;
             case COLLISION:
-                reward = -100.0; // terminal severe penalty for hitting obstacle
-                done = true;
+                // hitting obstacle: stay in place, obstacle cell becomes -10, subtract 1 point
+                reward = -1.0;
+                // do not mark episode done; episode continues until totalPoints < 0 or goal reached
                 break;
             case WALL:
-                reward = -1.0; // penalty for hitting wall (non-terminal)
+                reward = -1.0; // penalty for hitting border
                 break;
             case GOAL:
                 reward = 100.0;
@@ -83,8 +121,8 @@ public class Simulator {
         // incremental average (more numerically stable)
         avgDurationMs += ((double) lastDurationMs - avgDurationMs) / iterations;
         totalPoints += reward;
-        // assimilate totalPoints into the current cell
-        env.setCellScore(ap.x, ap.y, totalPoints);
+        // update lastAction for backtracking rule
+        lastAction = action;
         // if episode terminated (goal or collision), restart environment
         if (done) {
             restart();

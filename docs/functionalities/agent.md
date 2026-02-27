@@ -12,11 +12,17 @@ Key methods
 - `chooseAction(state)` — epsilon-greedy selection.
 - `update(s,a,reward,sNext,done)` — Q-value update rule.
 
-Rewards used by simulator
-- step (ordinary move): +10
-- collision (hitting obstacle): -100 (terminal, episode ends)
-- wall (attempted out-of-bounds): -1 (non-terminal)
-- goal: +100 (episode terminal)
+Rewards and rules used by simulator (updated)
+- Moving to an empty cell: +10 (destination cell score increases by +10)
+- Hitting an obstacle: -1 (agent stays in previous cell; obstacle cell is set to -10)
+- Hitting the border (out-of-bounds attempt): -1
+- Goal: +100 (episode terminal)
+
+Additional environment rules
+- Start `A` is initialized with value `0`.
+- The agent is prevented from immediately backtracking to its previous cell unless that reverse move is the only unblocked option.
+- The environment tracks a visited trail for display and attraction purposes.
+- Session-level `totalPoints` is tracked; if it becomes negative the simulator resets (randomizes obstacles and positions).
 
 Quadratp (variable-size grid) guidance
 - State space: an N x N grid with obstacles masked. Use a flattened index `i = y*N + x` for fixed-size tabular Q.

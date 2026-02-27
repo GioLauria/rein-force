@@ -61,4 +61,17 @@ Contributing
 What changed recently
 - The project now preserves commit bodies in the changelog, uses annotated tags with changelog messages, and includes hooks to keep the changelog updated automatically on commit.
 
+Reinforcement-learning rules (local simulator behaviour)
+- Grid: an N x M cell box with X random interior obstacles.
+- Start (A) and goal (B) are random perimeter points; the start cell `A` is initialized with value `0`.
+- Movement: actions are North/South/East/West (4-action discrete space). The bot can move only to cells with equal-or-higher implicit value preference (simulated by cell scores and attraction), and is prevented from immediately backtracking to the previous cell unless all alternatives are blocked.
+- Rewards and penalties used by the simulator:
+	- Moving to an empty cell: +10 points (the destination cell's score is increased accordingly).
+	- Hitting an obstacle: -1 point; the agent remains in its previous cell and the obstacle cell is set to -10.
+	- Hitting a border (attempted out-of-bounds): -1 point.
+	- Reaching the goal `B`: +100 points (episode end).
+- Session scoring: a running `totalPoints` is kept; if it drops below zero the environment resets (randomizing obstacles and positions).
+- Visual: the bot leaves a visited trail on cells it traverses.
+- Timing: the bot performs 2 moves per second (configurable in the simulator).
+
 If you want a different release workflow or tag naming convention, update `scripts/tag_release.sh` and corresponding PowerShell script accordingly.
