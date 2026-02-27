@@ -25,3 +25,5 @@ releases, and make final decisions when consensus cannot be reached.
 Maintainers: Gio Lauria (@GioLauria)
 
 For governance or release questions: giovanni.lauria@gmail.com
+
+<!-- Docs updated (2026-02-27): See README/docs for simulator behavior updates (moves/sec, Randomizer, loop detection, session dialogs). -->

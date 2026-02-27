@@ -1,14 +1,13 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-
+<!-- Docs updated (2026-02-27): Simulator defaults to 20 moves/sec; uses probabilistic `Randomizer` (softmax); enforces no-immediate-backtrack and recent-position window (default 10); loop-detection/backtrack when stuck; sessions show "Episode Ended" or "Session Lost". -->
 The format is based on Keep a Changelog, and this project adheres to Semantic
 Versioning.
 
 ## [Unreleased]
 
-- docs: update READ
-- E with new scripts, changelog and release workflow
+- Work in progress: updates to simulator behavior (loop-detection, recent-window, Randomizer), docs and scripts. See README and `docs/` for details.
 
 ## [v0.0.13] - 2026-02-27
 

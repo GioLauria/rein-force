@@ -1,3 +1,4 @@
+# Docs updated (2026-02-27): simulator runtime behavior updated; see `docs/architecture.md` for details.
 # Sequence Diagram: Simulator runtime
 
 This sequence diagram is written in the WebSequenceDiagrams / sequencediagram.org

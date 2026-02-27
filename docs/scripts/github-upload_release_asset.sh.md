@@ -1,3 +1,4 @@
+<!-- Docs updated (2026-02-27): General simulator behavior changed (see README/docs). -->
 # .github/scripts/upload_release_asset.sh
 
 - **Location:** .github/scripts/upload_release_asset.sh

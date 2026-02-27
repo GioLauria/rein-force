@@ -1,3 +1,4 @@
+<!-- Docs updated (2026-02-27): General simulator behavior changed (see README/docs). -->
 # scripts/build_with_tag.bat
 
 - **Location:** scripts/build_with_tag.bat

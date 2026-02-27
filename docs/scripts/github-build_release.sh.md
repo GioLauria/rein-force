@@ -1,3 +1,4 @@
+<!-- Docs updated (2026-02-27): General simulator behavior changed (see README/docs). -->
 # .github/scripts/build_release.sh
 
 - **Location:** .github/scripts/build_release.sh

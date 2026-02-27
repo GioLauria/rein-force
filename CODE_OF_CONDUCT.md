@@ -114,3 +114,5 @@ available at https://www.contributor-covenant.org/version/2/1/code_of_conduct.ht
 
 Community Impact Guidelines were inspired by Mozilla's code of conduct
 enforcement ladder.
+
+<!-- Docs updated (2026-02-27): Project documentation synchronized — see README and docs/functionalities for simulator behavior updates (moves/sec, Randomizer selection, recent-window, loop-detection, session dialogs). -->

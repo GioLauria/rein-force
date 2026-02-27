@@ -1,3 +1,4 @@
+<!-- Docs updated (2026-02-27): General simulator behavior changed (see README/docs). -->
 # .github/scripts/ensure_release.sh
 
 - **Location:** .github/scripts/ensure_release.sh

@@ -1,3 +1,4 @@
+<!-- Docs updated (2026-02-27): General simulator behavior changed (see README/docs). -->
 # .githooks/post-commit
 
 - **Location:** .githooks/post-commit (POSIX) and `.githooks/post-commit.cmd` (Windows)

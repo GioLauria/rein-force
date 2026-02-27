@@ -13,3 +13,5 @@ This directory documents the project organized by functionality. Each page focus
 Release & scripts
 - `scripts/` — helper scripts for building, running, changelog generation and releases. See `docs/scripts/` for per-script documentation.
 - Git hooks are provided in `.githooks/` (pre-commit, post-commit, pre-push) and can be enabled with `git config core.hooksPath .githooks`.
+
+**Docs updated (2026-02-27):** Functional behavior updated: simulator defaults to 20 moves/sec; probabilistic `Randomizer` is used for actions (softmax); no-immediate-backtrack and recent-window avoidance are enforced; loop-detection/backtrack prevents cycles; sessions show "Episode Ended" and "Session Lost" dialogs.

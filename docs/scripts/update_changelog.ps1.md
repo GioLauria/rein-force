@@ -1,3 +1,4 @@
+<!-- Docs updated (2026-02-27): General simulator behavior changed (see README/docs). -->
 # scripts/update_changelog.ps1
 
 - **Location:** scripts/update_changelog.ps1

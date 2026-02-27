@@ -72,4 +72,6 @@ If you can't resolve an issue, open an issue and attach the relevant logs (Maven
 
 ---
 Last updated: 2026-02-26
+
+<!-- Docs updated (2026-02-27): Simulator behaviour and runtime notes updated: default 20 moves/sec, Randomizer softmax, no-immediate-backtrack, recent-window avoiding revisits, loop-detection/backtrack, session dialogs. -->
 ```

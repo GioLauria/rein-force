@@ -86,3 +86,5 @@ GUI statistics overlay
 	- **Last duration:** duration in milliseconds of the most recent iteration.
 
 These metrics are updated on the Swing event thread and are intended for quick, local performance checks while developing or running experiments.
+
+**Docs updated (2026-02-27):** Runtime behavior: default simulator speed is 20 moves/sec; action selection uses a `Randomizer` (softmax) combined with Q-values and neighbor attraction; the simulator enforces no-immediate-backtrack and a recent-position window (default 10) to discourage revisits; a simple loop-detection forces backtrack when stuck; sessions show "Episode Ended" and "Session Lost" dialogs.

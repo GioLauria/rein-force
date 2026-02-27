@@ -1,3 +1,4 @@
+<!-- Docs updated (2026-02-27): General simulator behavior changed (see README/docs). -->
 # .github/scripts/upload_release_asset.ps1
 
 - **Location:** .github/scripts/upload_release_asset.ps1

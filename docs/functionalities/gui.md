@@ -12,3 +12,5 @@ Components
 Rendering details
 - Uses fixed cell-based rendering; avoids anti-aliasing for simplicity.
 - Preferred frame size in launcher: 800x860.
+
+**Docs updated (2026-02-27):** Simulator defaults to 20 moves/sec; UI overlays and dialogs reflect updated runtime behaviors (softmax `Randomizer` selection, recent-window avoidance, loop-detection/backtrack, session end dialogs).

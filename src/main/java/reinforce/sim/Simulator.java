@@ -13,9 +13,13 @@ public class Simulator {
     private long lastDurationMs = 0;
     private double totalPoints = 0.0;
     private final int initialObstacleCount;
-    private static final int DEFAULT_MOVES_PER_SECOND = 8; // default bot speed (moves per second)
+    private static final int DEFAULT_MOVES_PER_SECOND = 20; // default bot speed (moves per second)
     private int movesPerSecond = DEFAULT_MOVES_PER_SECOND; // configurable
     private int lastAction = -1; // track previous action to avoid immediate backtracking
+    private static final double REVISIT_PENALTY = 5.0; // penalty applied to visited cell attraction / reward
+    private final java.util.Deque<Integer> stateHistory = new java.util.ArrayDeque<>();
+    private int historyCapacity = 20; // number of recent states to inspect for loops
+    private static final int LOOP_DETECT_THRESHOLD = 2; // occurrences within history to consider a loop
 
     public Simulator(int gridSize, int obstacleCount) {
         this(gridSize, obstacleCount, DEFAULT_MOVES_PER_SECOND);
@@ -65,6 +69,7 @@ public class Simulator {
         int[] dy = {-1, 0, 1, 0};
         int maxX = env.getWidth() - 1;
         int maxY = env.getHeight() - 1;
+        boolean[] wasVisitedBefore = new boolean[4];
         for (int i = 0; i < 4; i++) {
             int nx = ap.x + dx[i];
             int ny = ap.y + dy[i];
@@ -74,6 +79,10 @@ public class Simulator {
                 neighborScores[i] = -10.0; // obstacle
             } else if (env.isInRecent(nx, ny)) {
                 neighborScores[i] = Double.NEGATIVE_INFINITY; // avoid last-N visited cells
+            } else if (env.isVisited(nx, ny)) {
+                // visited before — lower attraction so agent prefers unvisited cells
+                wasVisitedBefore[i] = true;
+                neighborScores[i] = env.getCellScore(nx, ny) - REVISIT_PENALTY;
             } else {
                 neighborScores[i] = env.getCellScore(nx, ny);
             }
@@ -84,8 +93,60 @@ public class Simulator {
         double[] qrow = agent.getQ()[state];
         double[] combined = new double[4];
         for (int i = 0; i < 4; i++) combined[i] = qrow[i] + attractionWeight * neighborScores[i];
+        // determine allowed moves (exclude out-of-bounds, recent, and obstacles)
+        java.util.List<Integer> allowedMoves = new java.util.ArrayList<>();
+        for (int a = 0; a < 4; a++) {
+            int tx = ap.x + dx[a];
+            int ty = ap.y + dy[a];
+            if (tx < 0 || tx > maxX || ty < 0 || ty > maxY) continue;
+            if (env.isObstacle(tx, ty)) continue;
+            if (env.isInRecent(tx, ty)) continue;
+            allowedMoves.add(a);
+        }
+
+        // detect simple loops: if the current state appears multiple times in recent history
+        boolean stuckDetected = false;
+        int occurrences = 0;
+        for (Integer s : stateHistory) if (s != null && s == state) occurrences++;
+        if (occurrences >= LOOP_DETECT_THRESHOLD) stuckDetected = true;
+
         // select action via a fresh randomizer (softmax sampling) so direction is decided probabilistically
         int action = new Randomizer(new java.util.Random()).sampleSoftmax(combined);
+        // if sampled action is not legal, pick uniformly from allowed moves; if none available, we'll allow backtracking
+        if (!allowedMoves.contains(action)) {
+            if (!allowedMoves.isEmpty()) {
+                action = allowedMoves.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(allowedMoves.size()));
+            } else {
+                // no legal forward moves — consider this "stuck" and prefer to go back
+                if (lastAction != -1) {
+                    int reverse = (lastAction + 2) % 4;
+                    // allow reverse even if it was previously disallowed
+                    action = reverse;
+                } else {
+                    // as a last resort, pick any direction
+                    action = java.util.concurrent.ThreadLocalRandom.current().nextInt(4);
+                }
+            }
+        }
+
+        // If we detected a loop, prefer backtracking or an allowed move to break the cycle
+        if (stuckDetected) {
+            if (lastAction != -1) {
+                int reverse = (lastAction + 2) % 4;
+                // if reverse is legal, choose it; otherwise prefer any allowed move
+                int rx = ap.x + dx[reverse];
+                int ry = ap.y + dy[reverse];
+                if (rx >= 0 && rx <= maxX && ry >= 0 && ry <= maxY && !env.isObstacle(rx, ry)) {
+                    action = reverse;
+                } else if (!allowedMoves.isEmpty()) {
+                    action = allowedMoves.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(allowedMoves.size()));
+                } else {
+                    action = java.util.concurrent.ThreadLocalRandom.current().nextInt(4);
+                }
+            } else if (!allowedMoves.isEmpty()) {
+                action = allowedMoves.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(allowedMoves.size()));
+            }
+        }
         // enforce "cannot go back unless blocked": if chosen action is reverse of lastAction
         if (lastAction != -1) {
             int reverse = (lastAction + 2) % 4;
@@ -119,11 +180,19 @@ public class Simulator {
         switch (result) {
             case CONTINUE:
                 // moved to an empty/valid cell
-                reward = 10.0;
-                // increase the destination cell's score so agent can prefer higher cells
+                // if the destination was visited before, punish the revisit; otherwise reward and increase cell score
                 java.awt.Point newPos = env.getAgent();
-                double prevVal = env.getCellScore(newPos.x, newPos.y);
-                env.setCellScore(newPos.x, newPos.y, prevVal + 10.0);
+                boolean revisited = false;
+                // determine if the chosen action led to a previously visited cell
+                if (action >= 0 && action < wasVisitedBefore.length) revisited = wasVisitedBefore[action];
+                if (revisited) {
+                    reward = -REVISIT_PENALTY; // negative reward for revisiting
+                } else {
+                    reward = 10.0;
+                    // increase the destination cell's score so agent can prefer higher cells
+                    double prevVal = env.getCellScore(newPos.x, newPos.y);
+                    env.setCellScore(newPos.x, newPos.y, prevVal + 10.0);
+                }
                 break;
             case COLLISION:
                 // hitting obstacle: stay in place, obstacle cell becomes -10, subtract 1 point
@@ -149,6 +218,9 @@ public class Simulator {
         totalPoints += reward;
         // update lastAction for backtracking rule
         lastAction = action;
+        // record the state into history for loop detection
+        stateHistory.addLast(state);
+        while (stateHistory.size() > historyCapacity) stateHistory.removeFirst();
         // if episode terminated (goal or collision), restart environment
         if (done) {
             // show a dialog on goal reached
@@ -160,8 +232,20 @@ public class Simulator {
             return;
         }
 
-        // if points drop below zero, restart the environment
+        // if points drop below zero, show dialog then restart the environment
         if (totalPoints < 0.0) {
+            if (view != null) {
+                Runnable show = () -> javax.swing.JOptionPane.showMessageDialog(view, "Session Lost");
+                if (javax.swing.SwingUtilities.isEventDispatchThread()) {
+                    show.run();
+                } else {
+                    try {
+                        javax.swing.SwingUtilities.invokeAndWait(show);
+                    } catch (Exception ex) {
+                        // ignore and continue to restart
+                    }
+                }
+            }
             restart();
             return;
         }

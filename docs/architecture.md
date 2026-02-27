@@ -47,3 +47,5 @@ Provide a concise map of responsibilities and runtime interactions so contributo
 - `src/main/java/reinforce/sim/SimulatorPanel.java`
 - `src/main/java/reinforce/sim/ControlPanel.java`
 
+**Docs updated (2026-02-27):** Simulator now defaults to 20 moves/sec; action selection uses a probabilistic `Randomizer` (softmax) and the simulator enforces no-immediate-backtrack plus a recent-position window (default 10). A simple loop-detection mechanism forces backtrack when stuck. Session end dialogs: "Episode Ended" (goal) and "Session Lost" (negative score).
+

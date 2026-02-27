@@ -45,3 +45,5 @@ Notes:
 Hints for tuning
 - Increase `epsilon` to encourage exploration during early training.
 - Decrease `alpha` for more stable learning when rewards are noisy.
+
+**Docs updated (2026-02-27):** Simulator now defaults to 20 moves/sec; action selection can use a probabilistic `Randomizer` (softmax) combined with Q-values and neighbor attraction. The simulator enforces no-immediate-backtrack and a recent-position window (default 10) to reduce trivial revisits; a simple loop-detection forces backtrack when stuck. Session-level dialogs: "Episode Ended" on reaching goal, "Session Lost" when `totalPoints` goes negative.

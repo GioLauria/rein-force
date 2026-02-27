@@ -150,3 +150,8 @@ Releases follow Semantic Versioning. Typical steps:
 
 If you need assistance making a release, contact the maintainers listed in `GOVERNANCE.md`.
 
+## Update Note
+
+Please ensure to check for any updates in the contributing guidelines regularly.
+We appreciate your contributions and feedback!
+

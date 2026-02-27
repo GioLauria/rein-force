@@ -26,3 +26,5 @@ java -jar target/rein-force-sim-0.1.0.jar
 
 Automated test recommendations
 - Add deterministic tests by seeding RNG or exposing constructors that accept a `Random` instance. The simulator uses a probabilistic `Randomizer` to select directions; pass a seeded `Random` to `QLearningAgent` or `Randomizer` for repeatable behaviour in tests.
+
+**Docs updated (2026-02-27):** Tests/docs note: simulator defaults to 20 moves/sec; selection uses `Randomizer` softmax. For deterministic testing seed the `Random` passed to `Randomizer`/`QLearningAgent` or mock selection.

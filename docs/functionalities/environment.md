@@ -17,3 +17,5 @@ Key behaviors
 Notes
 - Obstacles are placed avoiding the outer perimeter to ensure start/goal can be on edges.
 - State indexing: `stateIndex(Point)` maps (x,y) to a linear state id used by the agent.
+
+**Docs updated (2026-02-27):** The simulator now defaults to 20 moves/sec. Movement selection uses a probabilistic `Randomizer` (softmax) combined with Q-values and neighbor attraction. The environment exposes `isInRecent(x,y)` (default capacity 10) which the simulator uses to avoid revisits; a loop-detection + forced backtrack mechanism prevents simple cycles.

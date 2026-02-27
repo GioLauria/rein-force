@@ -1,3 +1,4 @@
+<!-- Docs updated (2026-02-27): Runtime defaults changed; see README/docs. -->
 # scripts/run.bat
 
 - **Location:** scripts/run.bat
