@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): add 9eac0d2 to Unreleased (aeaf64e)
+
+
 chore(changelog): add 1fc232d to Unreleased (9eac0d2)
 
 
