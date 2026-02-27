@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): add 13c45ac to Unreleased (ea64ba8)
+
+
 chore(release): finalize hooks, changelog and release scripts (13c45ac)
 
 
