@@ -9,3 +9,7 @@ This directory documents the project organized by functionality. Each page focus
 - `testing.md` — unit tests and manual testing procedure
 - `development.md` — build, run and IDE setup
 - `api.md` — brief API/class reference
+
+Release & scripts
+- `scripts/` — helper scripts for building, running, changelog generation and releases. See `docs/scripts/` for per-script documentation.
+- Git hooks are provided in `.githooks/` (pre-commit, post-commit, pre-push) and can be enabled with `git config core.hooksPath .githooks`.

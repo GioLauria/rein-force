@@ -20,8 +20,11 @@ Common commands
 # Build artifact without tests (wrapper)
 ./mvnw -DskipTests package
 
-# Run the application
-java -jar target/rein-force-sim-0.1.0.jar
+# Run the application using helper script (preferred)
+./scripts/run.sh
+
+# Build and embed the repository revision into the artifact
+./scripts/build_with_tag.sh
 ```
 
 Set JAVA_HOME (required by the Maven Wrapper)
@@ -55,27 +58,18 @@ echo $JAVA_HOME  # or on Windows: echo %JAVA_HOME%
 java -version
 ```
 
-Build with repository revision
+Build and release helpers
 
-You can build the project and embed the current Git tag/commit into the JAR's manifest by using the helper scripts in `scripts/`.
+The project includes helper scripts in `scripts/` to standardize builds and releases:
 
-- Windows:
-
-```cmd
-scripts\build_with_tag.bat
-```
-
-- macOS / Linux:
-
-```bash
-./scripts/build_with_tag.sh
-```
+- `scripts/build_with_tag.sh` / `scripts/build_with_tag.bat`: build the project and set the Maven `revision` property to the latest `v*` tag (or short commit SHA). This lets the build embed the release revision.
+- `scripts/run.sh` / `scripts/run.bat`: build (passing `-Drevision`) and run the produced JAR. The script locates the JAR in `target/` and executes it, so the filename need not be hard-coded.
+- `scripts/update_changelog.sh` / `scripts/update_changelog.ps1`: regenerate `CHANGELOG.md` following Keep a Changelog (Unreleased first, version headers include dates). Commit bodies are preserved as blockquotes so GitHub release bodies keep paragraph breaks.
+- `scripts/tag_release.sh` / `scripts/tag_release.ps1`: create (or replace) an annotated tag using the `CHANGELOG.md` section for the tag as the tag message, then push the annotated tag to `origin`.
 
 Build output location
 
-Both helper scripts place the built JAR under the `outputs/` directory at the repository root as `outputs/rein-force-sim-<revision>.jar`.
-
-The scripts will attempt to use the latest Git tag as the `Implementation-Version` manifest entry and fall back to the short commit id or `unknown` when no tag is available.
+The built JAR is produced under `target/` by Maven and executed by `scripts/run.*`. Use `scripts/build_with_tag.*` to ensure the `revision` property is set to the same value as your intended release tag.
 
 IDE tips
 - IntelliJ: Open the project as a Maven project. Use `Run` on `AppLauncher` or create an artifact.
