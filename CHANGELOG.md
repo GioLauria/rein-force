@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): dedupe Unreleased; fix updater loop (ff37a23)
+
+
 chore(changelog): add 9bab810 to Unreleased (005fa31)
 
 
