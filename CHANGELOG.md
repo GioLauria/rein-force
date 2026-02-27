@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore: save workspace changes (30460f6)
+
+
 - chore(changelog): add multiple commits to Unreleased
 - chore(release): finalize hooks, changelog and release scripts
 - chore(hooks): install post-commit hook and document it; clean changelog
