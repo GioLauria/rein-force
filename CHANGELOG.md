@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): add 7371765 to Unreleased (97731ea)
+
+
 chore(changelog): deduplicate Unreleased entries and remove commit ids (7371765)
 
 
