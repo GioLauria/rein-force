@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): add f7a38a6 to Unreleased (03e534c)
+
+
 chore(changelog): add fce8e8e to Unreleased (f7a38a6)
 
 
