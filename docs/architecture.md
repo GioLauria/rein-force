@@ -47,4 +47,3 @@ Provide a concise map of responsibilities and runtime interactions so contributo
 - `src/main/java/reinforce/sim/SimulatorPanel.java`
 - `src/main/java/reinforce/sim/ControlPanel.java`
 
-If you'd like, I can add a Mermaid sequence diagram or a class diagram to this document.
