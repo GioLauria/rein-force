@@ -6,6 +6,8 @@ try {
     $hash = git rev-parse --short HEAD
     if (Select-String -Path CHANGELOG.md -Pattern $hash -Quiet) { exit 0 }
     $title = git log -1 --pretty=format:%s
+    # if the latest commit is the changelog updater itself, skip to avoid a commit loop
+    if ($title -match '^chore\(changelog\): add [0-9a-f]+ to Unreleased$') { exit 0 }
     $body = git log -1 --pretty=format:%B
     $entry = "{0} ({1}`n`n" -f $title, $hash
     if ($body) {

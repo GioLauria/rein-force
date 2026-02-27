@@ -13,6 +13,10 @@ if grep -q "$hash" CHANGELOG.md; then
   exit 0
 fi
 title=$(git log -1 --pretty=format:%s)
+# if the latest commit is the changelog updater itself, skip to avoid a commit loop
+if echo "$title" | grep -qE '^chore\(changelog\): add [0-9a-f]+ to Unreleased$'; then
+  exit 0
+fi
 body=$(git log -1 --pretty=format:%b)
 entry_file=$(mktemp)
 printf "%s (%s)\n\n" "$title" "$hash" > "$entry_file"
