@@ -53,6 +53,10 @@ public class Simulator {
             int ny = ap.y + dy[i];
             if (nx < 0 || nx > maxX || ny < 0 || ny > maxY) {
                 neighborScores[i] = Double.NEGATIVE_INFINITY; // out-of-bounds
+            } else if (env.isObstacle(nx, ny)) {
+                neighborScores[i] = -10.0; // obstacle
+            } else if (env.isInRecent(nx, ny)) {
+                neighborScores[i] = Double.NEGATIVE_INFINITY; // avoid last-N visited cells
             } else {
                 neighborScores[i] = env.getCellScore(nx, ny);
             }
@@ -77,6 +81,7 @@ public class Simulator {
                     int ty = ap.y + dy[a];
                     if (tx < 0 || tx > maxX || ty < 0 || ty > maxY) continue;
                     if (env.isObstacle(tx, ty)) continue;
+                    if (env.isInRecent(tx, ty)) continue; // do not move to recent cells
                     double val = qrow[a] + attractionWeight * neighborScores[a];
                     if (val > bestVal) {
                         bestVal = val;
@@ -125,6 +130,11 @@ public class Simulator {
         lastAction = action;
         // if episode terminated (goal or collision), restart environment
         if (done) {
+            // show a dialog on goal reached
+            if (result == GridEnvironment.StepResult.GOAL && view != null) {
+                javax.swing.SwingUtilities.invokeLater(() ->
+                    javax.swing.JOptionPane.showMessageDialog(view, "Episode Ended"));
+            }
             restart();
             return;
         }

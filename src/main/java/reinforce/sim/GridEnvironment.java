@@ -17,6 +17,8 @@ public class GridEnvironment {
     private Point start;
     private Point goal;
     private Point agent;
+    private final java.util.Deque<Point> recent = new java.util.ArrayDeque<>();
+    private int recentCapacity = 10;
     private static final int MIN_SIZE = 3;
 
     public GridEnvironment(int size, int obstacleCount) {
@@ -43,6 +45,8 @@ public class GridEnvironment {
         goal = randomPerimeterPointDifferent(start);
         agent = new Point(start);
         visited[agent.y][agent.x] = true;
+        recent.clear();
+        recent.addLast(new Point(agent));
         // ensure A has value 0
         setCellScore(agent.x, agent.y, 0.0);
     }
@@ -135,6 +139,9 @@ public class GridEnvironment {
         }
         agent = np;
         visited[agent.y][agent.x] = true;
+        // maintain recent positions (sliding window)
+        recent.addLast(new Point(agent));
+        while (recent.size() > recentCapacity) recent.removeFirst();
         if (agent.equals(goal)) return StepResult.GOAL;
         return StepResult.CONTINUE;
     }
@@ -149,4 +156,13 @@ public class GridEnvironment {
     public double getCellScore(int x, int y) { return inBounds(x, y) ? cellScores[y][x] : 0.0; }
     public void setCellScore(int x, int y, double score) { if (inBounds(x, y)) cellScores[y][x] = score; }
     public void setCellScore(Point p, double score) { if (p != null) setCellScore(p.x, p.y, score); }
+    public boolean isVisited(int x, int y) { return inBounds(x, y) && visited[y][x]; }
+    public boolean isVisited(Point p) { return p != null && isVisited(p.x, p.y); }
+    public boolean isInRecent(int x, int y) {
+        if (!inBounds(x, y)) return false;
+        for (Point p : recent) if (p.x == x && p.y == y) return true;
+        return false;
+    }
+    public boolean isInRecent(Point p) { return p != null && isInRecent(p.x, p.y); }
+    public void setRecentCapacity(int cap) { if (cap > 0) this.recentCapacity = cap; }
 }
