@@ -20,7 +20,7 @@ try {
         $new = $parts[0] + $pattern + "`n`n" + $entry + $parts[1]
         Set-Content -Path CHANGELOG.md -Value $new -Encoding UTF8
         git add CHANGELOG.md
-        git commit -m "chore(changelog): add $hash to Unreleased" -q
+        try { git commit -m "chore(changelog): add $hash to Unreleased" -q } catch { }
     }
 } catch {
     # best-effort, never fail a commit because of changelog update

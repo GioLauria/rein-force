@@ -33,24 +33,24 @@ if [ -n "$latest_tag" ]; then
 else
   range="HEAD"
 fi
-commits=$(git log --pretty=format:%B"<<COMMIT>>" "$range" || true)
-if [ -z "$commits" ]; then
+raw=$(git log --pretty=format:"%B%x1e" "$range" 2>/dev/null || true)
+if [ -z "$raw" ]; then
   echo "- Placeholder for upcoming changes." >> "$TMP"
 else
-  IFS='<<COMMIT>>'
-  for block in $commits; do
-    block=$(echo "$block" | sed -e 's/^\s\+//' -e 's/\s\+$//')
-    [ -z "$block" ] && continue
-    subject=$(echo "$block" | awk 'NF{print; exit}')
-    echo "- $subject" >> "$TMP"
-    body=$(echo "$block" | sed -n '2,$p' | sed -e 's/^/> /')
-    if [ -n "$(echo "$body" | sed -e '/^> \s*$/d')" ]; then
-      echo "" >> "$TMP"
-      printf "%s\n" "$body" >> "$TMP"
-      echo "" >> "$TMP"
-    fi
-  done
-  unset IFS
+  # parse commits using ASCII RS (0x1E) as record separator, same logic as for released tags
+  printf "%s" "$raw" | awk 'BEGIN{ RS = sprintf("%c", 30) }
+    function trim(s){ sub(/^[ \t\r\n]+/,"",s); sub(/[ \t\r\n]+$/,"",s); return s }
+    { blk = trim($0); if (blk == "") next;
+      n = split(blk, lines, "\n");
+      subject=""; for(i=1;i<=n;i++){ if (lines[i] ~ /[^[:space:]]/){ subject=lines[i]; break } }
+      if (subject=="") next;
+      print "- " subject;
+      if (n>1) {
+        print "";
+        for (i=2;i<=n;i++) { if (lines[i] ~ /[^[:space:]]/) print "> " lines[i]; else print "> " }
+        print "";
+      }
+    }' >> "$TMP"
 fi
 
 echo "" >> "$TMP"

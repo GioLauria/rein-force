@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(hooks): install post-commit hook and document it; clean changelog (0416e1b)
+
+
 - Placeholder for upcoming changes.
  
 ## [v0.0.14] - 2026-02-27

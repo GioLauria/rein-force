@@ -57,11 +57,13 @@ if ($tags.Count -gt 0) {
 # Unreleased
 Add-Content $out "## [Unreleased]`n"
 if ($latestTag) { $range = "$latestTag..HEAD" } else { $range = "HEAD" }
-$raw = git log --pretty=format:%B"<<COMMIT>>" $range 2>$null || $null
+$raw = git log --pretty=format:"%B%x1e" $range 2>$null || $null
 if (-not $raw) {
     Add-Content $out "- Placeholder for upcoming changes.`n`n"
 } else {
-    $blocks = $raw -split '<<COMMIT>>'
+    # split on ASCII RS (0x1E)
+    $sep = [char]30
+    $blocks = $raw -split [regex]::Escape($sep)
     foreach ($blk in $blocks) { Write-CommitBlock $blk }
     Add-Content $out ""
 }

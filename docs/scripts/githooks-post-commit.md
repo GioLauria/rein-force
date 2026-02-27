@@ -5,7 +5,7 @@
 - **Purpose:** Run the `post_commit_update_changelog` updater to add the latest commit to `CHANGELOG.md` under `## [Unreleased]`.
 - **Usage:** Enabled by setting `git config core.hooksPath .githooks`.
 - **Local install:** For convenience the repository also installs a copy of the hook into `.git/hooks/post-commit` so the hook works out-of-the-box for local clones. The installed hook simply runs `scripts/post_commit_update_changelog.sh`.
-- **Notes:** The Windows wrapper calls the PowerShell updater; POSIX wrapper calls the shell updater. The updater now stages `CHANGELOG.md` but does not auto-commit; you can review and commit the staged changelog or enable auto-commit by editing `scripts/post_commit_update_changelog.sh`.
+- **Notes:** The Windows wrapper calls the PowerShell updater; POSIX wrapper calls the shell updater. The updater now automatically commits `CHANGELOG.md` after inserting the latest commit under `## [Unreleased]`.
 
 ## Installing / enabling hooks
 

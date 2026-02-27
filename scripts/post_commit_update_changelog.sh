@@ -31,4 +31,5 @@ awk -v f="$entry_file" '{
 mv CHANGELOG.new CHANGELOG.md
 rm -f "$entry_file"
 git add CHANGELOG.md
+printf "CHANGELOG.md staged for commit (post-commit updater).\n"
 git commit -m "chore(changelog): add ${hash} to Unreleased" || true
