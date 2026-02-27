@@ -1,13 +1,30 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-<!-- Docs updated (2026-02-27): Simulator defaults to 20 moves/sec; uses probabilistic `Randomizer` (softmax); enforces no-immediate-backtrack and recent-position window (default 10); loop-detection/backtrack when stuck; sessions show "Episode Ended" or "Session Lost". -->
+
 The format is based on Keep a Changelog, and this project adheres to Semantic
 Versioning.
 
 ## [Unreleased]
 
-- Work in progress: updates to simulator behavior (loop-detection, recent-window, Randomizer), docs and scripts. See README and `docs/` for details.
+- Placeholder for upcoming changes.
+ 
+## [v0.0.14] - 2026-02-27
+
+- chore(docs): update docs and changelog; record simulator behavior changes (2026-02-27)
+- fix(sim): use uniform random fallback among allowed moves to increase exploration
+- fix(sim): reset Randomizer each move (fresh RNG per step)
+- feat(sim): add Randomizer selector; use probabilistic softmax for action selection; update docs
+- chore(docs/sim): set default moves/sec to 4 and expose configurable API
+- feat(sim): forbid moves into last-10 positions; track recent trail
+- feat(sim): implement RL rules, scoring, trail; update docs
+- chore: commit workspace changes
+- docs(diagram): use full class names in sequence diagram
+- docs(diagram): make sequence diagram compatible with sequencediagram.org
+- docs(diagram): add Mermaid sequence diagram for simulator runtime
+- docs(architecture): add code relationships and runtime flow
+- chore(release): finalize docs, scripts and changelog
+- docs: update README with new scripts, changelog and release workflow
 
 ## [v0.0.13] - 2026-02-27
 
