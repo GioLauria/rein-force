@@ -25,4 +25,4 @@ java -jar target/rein-force-sim-0.1.0.jar
   - Observe agent respawn on collision and success on reaching goal.
 
 Automated test recommendations
-- Add deterministic tests by seeding RNG or exposing constructors that accept a `Random` instance.
+- Add deterministic tests by seeding RNG or exposing constructors that accept a `Random` instance. The simulator uses a probabilistic `Randomizer` to select directions; pass a seeded `Random` to `QLearningAgent` or `Randomizer` for repeatable behaviour in tests.

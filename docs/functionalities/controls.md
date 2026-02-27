@@ -10,3 +10,4 @@ Buttons
 Behavior
 - On `COLLISION`, the `Simulator` resets the agent to the start but continues the same training episode logic (update receives collision reward and episode termination flag).
 - `Restart` creates a new random environment (new obstacles and new A/B).
+- Movement rate: the bot's step frequency is configurable (default 4 moves/sec) via `Simulator#setMovesPerSecond`.

@@ -16,6 +16,7 @@ public class Simulator {
     private static final int DEFAULT_MOVES_PER_SECOND = 4;
     private int movesPerSecond = DEFAULT_MOVES_PER_SECOND; // configurable
     private int lastAction = -1; // track previous action to avoid immediate backtracking
+    private final Randomizer randomizer = new Randomizer(new java.util.Random());
 
     public Simulator(int gridSize, int obstacleCount) {
         this(gridSize, obstacleCount, DEFAULT_MOVES_PER_SECOND);
@@ -80,7 +81,12 @@ public class Simulator {
         }
 
         double attractionWeight = 0.5; // moderate bias towards higher-scored cells
-        int action = agent.chooseActionWithAttraction(state, neighborScores, attractionWeight);
+        // combine Q-values and neighbor scores into a per-action value array
+        double[] qrow = agent.getQ()[state];
+        double[] combined = new double[4];
+        for (int i = 0; i < 4; i++) combined[i] = qrow[i] + attractionWeight * neighborScores[i];
+        // select action via the randomizer (softmax sampling) so direction is decided probabilistically
+        int action = randomizer.sampleSoftmax(combined);
         // enforce "cannot go back unless blocked": if chosen action is reverse of lastAction
         if (lastAction != -1) {
             int reverse = (lastAction + 2) % 4;
@@ -89,7 +95,7 @@ public class Simulator {
             boolean reverseBlocked = (nx < 0 || nx > maxX || ny < 0 || ny > maxY) || env.isObstacle(nx, ny);
             if (action == reverse && !reverseBlocked) {
                 // find best alternative action (q + attraction) excluding reverse
-                double[] qrow = agent.getQ()[state];
+                double[] qrowLocal = agent.getQ()[state];
                 double bestVal = Double.NEGATIVE_INFINITY;
                 int bestAction = action; // fallback
                 for (int a = 0; a < 4; a++) {
@@ -99,7 +105,7 @@ public class Simulator {
                     if (tx < 0 || tx > maxX || ty < 0 || ty > maxY) continue;
                     if (env.isObstacle(tx, ty)) continue;
                     if (env.isInRecent(tx, ty)) continue; // do not move to recent cells
-                    double val = qrow[a] + attractionWeight * neighborScores[a];
+                    double val = qrowLocal[a] + attractionWeight * neighborScores[a];
                     if (val > bestVal) {
                         bestVal = val;
                         bestAction = a;

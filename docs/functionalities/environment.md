@@ -6,6 +6,7 @@ Contents
 - Grid: square discrete grid of size N x N.
 - Obstacles: randomly placed cells (not on perimeter by default).
 - Start / Goal: random, distinct perimeter points A (start) and B (goal).
+- Movement direction selection: the simulator uses a configurable probabilistic "randomizer" to pick directions based on Q-values and local cell scores.
 - Agent position: single cell representing the spherical bot.
 
 Key behaviors
