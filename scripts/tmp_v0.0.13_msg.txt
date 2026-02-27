@@ -1,0 +1,74 @@
+
+- docs(functionalities): document release scripts, hooks, and run/build workflow
+- chore(scripts): make run scripts use latest tag/sha as revision and execute built JAR
+
+> chore(scripts): make run scripts use latest tag/sha as revision and execute built JAR
+
+- chore(release): make changelog conform to Keep a
+
+> chore(release): make changelog conform to Keep a
+
+- hangelog (Unreleased first, dated versions) and use section for annotated tag messages
+- chore(scripts): make PowerShell changelog/tag helpers robust; add scripts docs
+
+> chore(scripts): make PowerShell changelog/tag helpers robust; add scripts docs
+
+- fix(release): generate multiline
+
+> fix(release): generate multiline
+
+- arkdown changelog and use changelog section for annotated tag
+- refactor(app): improve startup (LAF, args, pack, validation, error handling)
+
+> refactor(app): improve startup (LAF, args, pack, validation, error handling)
+
+- refactor(ui): improve
+
+> refactor(ui): improve
+
+- ontrolPanel (null-check, tooltips, mnemonics, button state)
+- refactor(env): validate size, bounds-safe accessors, cap obstacle placement
+
+> refactor(env): validate size, bounds-safe accessors, cap obstacle placement
+
+- refactor(agent): validate inputs, tie-break actions, defensive getQ, setters/getters
+
+> refactor(agent): validate inputs, tie-break actions, defensive getQ, setters/getters
+
+- refactor(sim): clarity and safety improvements in Simulator (clamp neighbors, constants, reuse agent pos)
+
+> refactor(sim): clarity and safety improvements in Simulator (clamp neighbors, constants, reuse agent pos)
+
+- chore(ui): remove avg/last durations from overlay stats
+
+> chore(ui): remove avg/last durations from overlay stats
+
+- fix(ui): center grid, guard zero-size, use Graphics2D and antialiasing
+
+> fix(ui): center grid, guard zero-size, use Graphics2D and antialiasing
+
+- chore: save changes
+
+> chore: save changes
+
+- chore(release): include v0.0.12 in
+
+> chore(release): include v0.0.12 in
+
+- HANGEL
+- G
+- chore(release): update
+
+> chore(release): update
+
+- HANGEL
+- G for v0.0.13
+- chore(scripts): place newest tag first and append Unreleased section
+
+> chore(scripts): place newest tag first and append Unreleased section
+
+- chore(scripts): changelog headings use tag-only (no date)
+
+> chore(scripts): changelog headings use tag-only (no date)
+
+

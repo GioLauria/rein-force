@@ -73,25 +73,25 @@ if [ ${#tags[@]} -gt 0 ]; then
     else
       range="$t"
     fi
-    # use full commit body (%B) and separate commits by a sentinel
-    commits=$(git log --pretty=format:%B"<<COMMIT>>" "$range" || true)
-    if [ -z "$commits" ]; then
+    # use full commit body (%B) and separate commits with ASCII RS (0x1E)
+    raw=$(git log --pretty=format:"%B%x1e" "$range" 2>/dev/null || true)
+    if [ -z "$raw" ]; then
       echo "- No changes recorded." >> "$TMP"
     else
-      IFS='<<COMMIT>>'
-      for block in $commits; do
-        block=$(echo "$block" | sed -e 's/^\s\+//' -e 's/\s\+$//')
-        [ -z "$block" ] && continue
-        subject=$(echo "$block" | awk 'NF{print; exit}')
-        echo "- $subject" >> "$TMP"
-        body=$(echo "$block" | sed -n '2,$p' | sed -e 's/^/> /')
-        if [ -n "$(echo "$body" | sed -e '/^> \s*$/d')" ]; then
-          echo "" >> "$TMP"
-          printf "%s\n" "$body" >> "$TMP"
-          echo "" >> "$TMP"
-        fi
-      done
-      unset IFS
+      printf "%s" "$raw" | awk 'BEGIN{ RS = sprintf("%c", 30) }
+        function trim(s){ sub(/^[ \t\r\n]+/,"",s); sub(/[ \t\r\n]+$/,"",s); return s }
+        { blk = trim($0); if (blk == "") next;
+          n = split(blk, lines, "\n");
+          # find first non-empty line as subject
+          subject=""; for(i=1;i<=n;i++){ if (lines[i] ~ /[^[:space:]]/){ subject=lines[i]; break } }
+          if (subject=="") next;
+          print "- " subject;
+          if (n>1) {
+            print "";
+            for (i=2;i<=n;i++) { if (lines[i] ~ /[^[:space:]]/) print "> " lines[i]; else print "> " }
+            print "";
+          }
+        }' >> "$TMP"
     fi
     echo "" >> "$TMP"
   done
