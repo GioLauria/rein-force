@@ -16,7 +16,6 @@ public class Simulator {
     private static final int DEFAULT_MOVES_PER_SECOND = 4;
     private int movesPerSecond = DEFAULT_MOVES_PER_SECOND; // configurable
     private int lastAction = -1; // track previous action to avoid immediate backtracking
-    private final Randomizer randomizer = new Randomizer(new java.util.Random());
 
     public Simulator(int gridSize, int obstacleCount) {
         this(gridSize, obstacleCount, DEFAULT_MOVES_PER_SECOND);
@@ -85,8 +84,8 @@ public class Simulator {
         double[] qrow = agent.getQ()[state];
         double[] combined = new double[4];
         for (int i = 0; i < 4; i++) combined[i] = qrow[i] + attractionWeight * neighborScores[i];
-        // select action via the randomizer (softmax sampling) so direction is decided probabilistically
-        int action = randomizer.sampleSoftmax(combined);
+        // select action via a fresh randomizer (softmax sampling) so direction is decided probabilistically
+        int action = new Randomizer(new java.util.Random()).sampleSoftmax(combined);
         // enforce "cannot go back unless blocked": if chosen action is reverse of lastAction
         if (lastAction != -1) {
             int reverse = (lastAction + 2) % 4;
