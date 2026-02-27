@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): add c2c92b9 to Unreleased (b0985dc)
+
+
 chore(changelog): add 5285fdf to Unreleased (c2c92b9)
 
 
