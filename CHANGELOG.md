@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): add 03e534c to Unreleased (1aff334)
+
+
 chore(changelog): add f7a38a6 to Unreleased (03e534c)
 
 
