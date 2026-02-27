@@ -88,8 +88,8 @@ public class SimulatorPanel extends JPanel {
         g2.fillOval(ox + a.x * cell + cell/6, oy + a.y * cell + cell/6, cell*2/3, cell*2/3);
 
         // overlay stats (top-left)
-        String stats = String.format("Iterations: %d  Avg: %.2f ms  Last: %d ms  Points: %.1f",
-            sim.getIterations(), sim.getAvgDurationMs(), sim.getLastDurationMs(), sim.getTotalPoints());
+        String stats = String.format("Iterations: %d  Points: %.1f",
+            sim.getIterations(), sim.getTotalPoints());
         java.awt.FontMetrics fm = g2.getFontMetrics();
         int textW = fm.stringWidth(stats);
         int textH = fm.getHeight();
