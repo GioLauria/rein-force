@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): add dae11f4 to Unreleased (4f82c7e)
+
+
 chore(changelog): add c4e57ef to Unreleased (dae11f4)
 
 
