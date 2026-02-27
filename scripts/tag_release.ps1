@@ -22,5 +22,10 @@ if (git rev-parse -q --verify "refs/tags/$Tag" 2>$null) {
 }
 
 # push commit (if any) and force-update tag on remote
-git push || Write-Host "git push failed (non-fatal)"
+try {
+  git push
+} catch {
+  Write-Host "git push failed (non-fatal)"
+}
+
 git push origin --force "refs/tags/$Tag"
