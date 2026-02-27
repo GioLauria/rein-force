@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(release): finalize hooks, changelog and release scripts (13c45ac)
+
+
 chore(hooks): install post-commit hook and document it; clean changelog (0416e1b)
 
 
