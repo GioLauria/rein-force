@@ -19,7 +19,8 @@ fi
 # extract the changelog section for this tag to use as the annotated tag message
 TMPMSG=$(mktemp)
 awk -v tag="$tag" '
-  $0 == "## [" tag "]" {printing=1; next}
+  # match header like: ## [tag] or ## [tag] - YYYY-MM-DD
+  $0 ~ ("^## \\"\[" tag "\\]") {printing=1; next}
   /^## \[/ { if (printing) exit }
   printing { print }
 ' CHANGELOG.md > "$TMPMSG"
