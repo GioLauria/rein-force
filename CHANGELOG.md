@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): add bee090d to Unreleased (bc04705)
+
+
 chore(changelog): add a3b0ff0 to Unreleased (bee090d)
 
 
