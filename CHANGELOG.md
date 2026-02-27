@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): add bec45b1 to Unreleased (167c98f)
+
+
 chore(changelog): add cc4fcbd to Unreleased (bec45b1)
 
 
