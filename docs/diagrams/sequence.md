@@ -6,36 +6,36 @@ syntax so it can be rendered on https://sequencediagram.org/.
 ```
 title Simulator runtime
 
-participant UI as AppLauncher / UI
-participant Sim as Simulator
-participant Env as GridEnvironment
-participant Agent as QLearningAgent
-participant View as SimulatorPanel
-participant Ctrl as ControlPanel
+participant AppLauncher
+participant Simulator
+participant GridEnvironment
+participant QLearningAgent
+participant SimulatorPanel
+participant ControlPanel
 
-note over UI: Application startup and composition
-UI->Sim: new Simulator(gridSize, obstacleCount)
-UI->View: new SimulatorPanel(sim)
-UI->Ctrl: new ControlPanel(sim)
-UI->Sim: sim.setView(panel), sim.start()
+note over AppLauncher: Application startup and composition
+AppLauncher->Simulator: new Simulator(gridSize, obstacleCount)
+AppLauncher->SimulatorPanel: new SimulatorPanel(sim)
+AppLauncher->ControlPanel: new ControlPanel(sim)
+AppLauncher->Simulator: sim.setView(panel), sim.start()
 
-note over Sim: Timer started (EDT)
+note over Simulator: Timer started (EDT)
 loop Each timer tick
-    Sim->Env: state = stateIndexAgent()
-    Sim->Env: neighborScores[] = getCellScore(...) (up,right,down,left)
-    Sim->Agent: chooseActionWithAttraction(state, neighborScores, weight)
-    Agent->Sim: action
-    Sim->Env: step(action)
-    Env->Sim: StepResult (CONTINUE | COLLISION | WALL | GOAL)
-    Sim->Agent: update(state, action, reward, nextState, done)
-    Sim->Env: setCellScore(agentPos, totalPoints)
-    Sim->View: view.repaint()
+    Simulator->GridEnvironment: state = stateIndexAgent()
+    Simulator->GridEnvironment: neighborScores[] = getCellScore(...) (up,right,down,left)
+    Simulator->QLearningAgent: chooseActionWithAttraction(state, neighborScores, weight)
+    QLearningAgent->Simulator: action
+    Simulator->GridEnvironment: step(action)
+    GridEnvironment->Simulator: StepResult (CONTINUE | COLLISION | WALL | GOAL)
+    Simulator->QLearningAgent: update(state, action, reward, nextState, done)
+    Simulator->GridEnvironment: setCellScore(agentPos, totalPoints)
+    Simulator->SimulatorPanel: view.repaint()
     alt episode done (GOAL or COLLISION)
-        Sim->Sim: restart()  -- reset environment & stats
+        Simulator->Simulator: restart()  -- reset environment & stats
     end
 end
 
-Ctrl->Sim: start()/stop()/restart()  -- user actions via buttons
+ControlPanel->Simulator: start()/stop()/restart()  -- user actions via buttons
 
-note over Sim,View: All UI painting and Timer callbacks run on the Swing EDT
+note over Simulator,SimulatorPanel: All UI painting and Timer callbacks run on the Swing EDT
 ```
