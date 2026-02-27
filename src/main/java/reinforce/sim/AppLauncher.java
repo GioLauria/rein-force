@@ -1,27 +1,56 @@
 package reinforce.sim;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 public class AppLauncher {
     public static void main(String[] args) {
+        // apply system look & feel where available
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ignored) {}
+
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Rein-Force Simulator");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setLayout(new BorderLayout());
+            try {
+                int gridSize = 20;
+                int obstacleCount = 40;
+                if (args.length >= 1) {
+                    try { gridSize = Integer.parseInt(args[0]); } catch (NumberFormatException ex) { /* keep default */ }
+                }
+                if (args.length >= 2) {
+                    try { obstacleCount = Integer.parseInt(args[1]); } catch (NumberFormatException ex) { /* keep default */ }
+                }
+                if (gridSize < 3) gridSize = 3;
+                if (obstacleCount < 0) obstacleCount = 0;
 
-            Simulator sim = new Simulator(20, 40); // 20x20 grid with 40 obstacles
-            SimulatorPanel panel = new SimulatorPanel(sim);
-            ControlPanel controls = new ControlPanel(sim);
+                JFrame frame = new JFrame("Rein-Force Simulator");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setLayout(new BorderLayout());
 
-            frame.add(panel, BorderLayout.CENTER);
-            frame.add(controls, BorderLayout.SOUTH);
-            frame.setSize(800, 860);
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
+                Simulator sim = new Simulator(gridSize, obstacleCount);
+                SimulatorPanel panel = new SimulatorPanel(sim);
+                ControlPanel controls = new ControlPanel(sim);
 
-            sim.setView(panel);
-            sim.start();
+                frame.add(panel, BorderLayout.CENTER);
+                frame.add(controls, BorderLayout.SOUTH);
+                frame.pack();
+                // ensure a sensible minimum size
+                Dimension min = panel.getPreferredSize();
+                frame.setMinimumSize(new Dimension(Math.max(400, min.width), Math.max(200, min.height + 60)));
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+
+                sim.setView(panel);
+                sim.start();
+            } catch (Throwable t) {
+                t.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Failed to start simulator: " + t.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
     }
 }
