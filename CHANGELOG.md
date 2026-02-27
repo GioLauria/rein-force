@@ -7,6 +7,9 @@ Versioning.
 
 ## [Unreleased]
 
+chore(changelog): add 00eda3f to Unreleased (db1fd5f)
+
+
 chore(changelog): add 33ad0fa to Unreleased (00eda3f)
 
 
