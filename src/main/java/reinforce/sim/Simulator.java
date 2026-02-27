@@ -13,7 +13,7 @@ public class Simulator {
     private long lastDurationMs = 0;
     private double totalPoints = 0.0;
     private final int initialObstacleCount;
-    private static final int DEFAULT_MOVES_PER_SECOND = 4;
+    private static final int DEFAULT_MOVES_PER_SECOND = 8; // default bot speed (moves per second)
     private int movesPerSecond = DEFAULT_MOVES_PER_SECOND; // configurable
     private int lastAction = -1; // track previous action to avoid immediate backtracking
 
@@ -93,10 +93,8 @@ public class Simulator {
             int ny = ap.y + dy[reverse];
             boolean reverseBlocked = (nx < 0 || nx > maxX || ny < 0 || ny > maxY) || env.isObstacle(nx, ny);
             if (action == reverse && !reverseBlocked) {
-                // find best alternative action (q + attraction) excluding reverse
-                double[] qrowLocal = agent.getQ()[state];
-                double bestVal = Double.NEGATIVE_INFINITY;
-                int bestAction = action; // fallback
+                // pick a truly random allowed alternative (uniform) excluding reverse
+                java.util.List<Integer> choices = new java.util.ArrayList<>();
                 for (int a = 0; a < 4; a++) {
                     if (a == reverse) continue;
                     int tx = ap.x + dx[a];
@@ -104,13 +102,14 @@ public class Simulator {
                     if (tx < 0 || tx > maxX || ty < 0 || ty > maxY) continue;
                     if (env.isObstacle(tx, ty)) continue;
                     if (env.isInRecent(tx, ty)) continue; // do not move to recent cells
-                    double val = qrowLocal[a] + attractionWeight * neighborScores[a];
-                    if (val > bestVal) {
-                        bestVal = val;
-                        bestAction = a;
-                    }
+                    choices.add(a);
                 }
-                action = bestAction;
+                if (!choices.isEmpty()) {
+                    action = choices.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(choices.size()));
+                } else {
+                    // no alternative available -> allow reverse
+                    action = reverse;
+                }
             }
         }
         GridEnvironment.StepResult result = env.step(action);
