@@ -1,7 +1,7 @@
 package reinforce.sim;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -47,29 +47,6 @@ public class QLearningAgent {
         double bestVal = Double.NEGATIVE_INFINITY;
         for (int a = 0; a < actionCount; a++) {
             double val = row[a];
-            int cmp = Double.compare(val, bestVal);
-            if (cmp > 0) {
-                bests.clear();
-                bests.add(a);
-                bestVal = val;
-            } else if (cmp == 0) {
-                bests.add(a);
-            }
-        }
-        return bests.get(rnd.nextInt(bests.size()));
-    }
-
-    public int chooseActionWithAttraction(int state, double[] neighborScores, double attractionWeight) {
-        checkState(state);
-        if (rnd.nextDouble() < epsilon) return rnd.nextInt(actionCount);
-        double[] row = q[state];
-        // clamp attraction weight to reasonable range
-        double w = Double.isFinite(attractionWeight) ? Math.max(0.0, Math.min(1.0, attractionWeight)) : 0.0;
-        List<Integer> bests = new ArrayList<>();
-        double bestVal = Double.NEGATIVE_INFINITY;
-        for (int a = 0; a < actionCount; a++) {
-            double attr = (neighborScores != null && neighborScores.length > a) ? neighborScores[a] : 0.0;
-            double val = row[a] + w * attr;
             int cmp = Double.compare(val, bestVal);
             if (cmp > 0) {
                 bests.clear();

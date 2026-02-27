@@ -164,5 +164,5 @@ public class GridEnvironment {
         return false;
     }
     public boolean isInRecent(Point p) { return p != null && isInRecent(p.x, p.y); }
-    public void setRecentCapacity(int cap) { if (cap > 0) this.recentCapacity = cap; }
+    // recentCapacity is internal tuning; removed setter to simplify API
 }
